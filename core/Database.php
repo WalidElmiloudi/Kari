@@ -10,7 +10,7 @@ final class Database
 
     private function __construct(){}
 
-    public static function getInstance()
+    public static function getInstance(): PDO
     {
         if(self::$instance === null){
             $config = require __DIR__.'/../config/database.php';

@@ -2,7 +2,8 @@
     "require": {},
     "autoload":{
         "psr-4":{
-            "Core\\" : "core/"
+            "Core\\" : "core/",
+            "Entities\\" : "entities/"
         }
     }
 }
