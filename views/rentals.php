@@ -1,5 +1,11 @@
 <?php
 session_start();
+
+require '../vendor/autoload.php';
+
+use Entities\Host;
+
+$rentals = Host::getAllRentals($_SESSION['userID']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -17,7 +23,7 @@ session_start();
 </head>
 <body class="bg-gray-100">
      <!-- Navigation -->
-    <nav class="bg-white shadow-lg sticky top-0 z-50">
+    <nav class="bg-white shadow-lg sticky w-full top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <!-- Logo -->
@@ -100,7 +106,7 @@ session_start();
                 <a href="#favorites" class="text-gray-700 hover:text-blue-600 py-2">Favoris</a>
                 <a href="#notifications" class="text-gray-700 hover:text-blue-600 py-2">
                     <i class="far fa-bell mr-2"></i>Notifications
-                    <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">3</span>
+                    <!-- <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">3</span> -->
                 </a>
                 <hr>
                 <a href="#profile" class="text-gray-700 hover:text-blue-600 py-2">
@@ -124,8 +130,8 @@ session_start();
                     <h2 class="text-2xl font-bold text-gray-800">Bienvenue, <?= ucfirst($_SESSION['name']) ?></h2>
                     <p class="text-gray-600">Voici un aperçu de votre activité hôte</p>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center">
+                <div id="add-rental" class="flex items-center space-x-4">
+                    <button  class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition flex items-center">
                         <i class="fas fa-plus mr-2"></i> Nouveau logement
                     </button>
                 </div>
@@ -140,14 +146,11 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Revenus ce mois</p>
-                                <p class="text-3xl font-bold">2,845€</p>
+                                <p class="text-3xl font-bold">0$</p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-                                <i class="fas fa-euro-sign text-green-600 text-xl"></i>
+                                <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-green-600">
-                            <i class="fas fa-arrow-up mr-1"></i> 18% vs mois dernier
                         </div>
                     </div>
                     
@@ -156,14 +159,11 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Réservations actives</p>
-                                <p class="text-3xl font-bold">8</p>
+                                <p class="text-3xl font-bold">0</p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
                                 <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-blue-600">
-                            3 arrivées cette semaine
                         </div>
                     </div>
                     
@@ -172,14 +172,11 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Taux d'occupation</p>
-                                <p class="text-3xl font-bold">78%</p>
+                                <p class="text-3xl font-bold">0</p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
                                 <i class="fas fa-chart-line text-purple-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-purple-600">
-                            <i class="fas fa-arrow-up mr-1"></i> 12% vs mois dernier
                         </div>
                     </div>
                     
@@ -188,14 +185,11 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Note moyenne</p>
-                                <p class="text-3xl font-bold">4.9</p>
+                                <p class="text-3xl font-bold">0</p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center">
                                 <i class="fas fa-star text-yellow-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-gray-600">
-                            24 avis ce mois-ci
                         </div>
                     </div>
                 </div>
@@ -207,37 +201,31 @@ session_start();
                         <!-- Section Header -->
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold text-gray-800">Mes logements</h3>
-                            <div class="flex space-x-2">
-                                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                    <i class="fas fa-filter mr-2"></i>Filtrer
-                                </button>
-                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                    <i class="fas fa-plus mr-2"></i>Ajouter
-                                </button>
-                            </div>
                         </div>
                         
-                        <!-- Rentals List -->
+                        <!-- Rentals List Container -->
                         <div class="space-y-6">
-                            <!-- Rental 1 -->
-                            <div class="bg-white rounded-xl shadow overflow-hidden">
+                            <?php
+                            foreach($rentals as $rental){
+                            ?>
+                                 <div class="bg-white rounded-xl shadow overflow-hidden">
                                 <div class="flex">
                                     <div class="w-48 relative">
-                                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                                             alt="Appartement Paris" class="h-full w-full object-cover">
+                                        <img src="<?= $rental['img'] ?>" 
+                                             alt="logement photo" class="h-full w-full object-cover">
                                         <div class="absolute top-2 left-2">
-                                            <span class="bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">ACTIF</span>
+                                            <span class="bg-gray-600 text-white text-xs font-bold px-2 py-1 rounded"><?= $rental['statut'] ?></span>
                                         </div>
                                     </div>
                                     <div class="flex-1 p-6">
                                         <div class="flex justify-between items-start">
                                             <div>
-                                                <h4 class="font-bold text-lg">Appartement moderne à Paris</h4>
+                                                <h4 class="font-bold text-lg"><?= $rental['title'] ?></h4>
                                                 <p class="text-gray-600 text-sm">
-                                                    <i class="fas fa-map-marker-alt mr-1"></i>Paris, 15ème arrondissement
+                                                    <i class="fas fa-map-marker-alt mr-1"></i><?= $rental['city'] ?>,<?= $rental['adress'] ?>
                                                 </p>
                                                 <div class="flex items-center mt-2">
-                                                    <div class="flex text-yellow-400">
+                                                    <!-- <div class="flex text-yellow-400">
                                                         <i class="fas fa-star"></i>
                                                         <i class="fas fa-star"></i>
                                                         <i class="fas fa-star"></i>
@@ -245,26 +233,26 @@ session_start();
                                                         <i class="fas fa-star-half-alt"></i>
                                                     </div>
                                                     <span class="ml-2 font-bold">4.8</span>
-                                                    <span class="ml-1 text-gray-600">(42 avis)</span>
+                                                    <span class="ml-1 text-gray-600">(42 avis)</span> -->
                                                 </div>
                                             </div>
                                             <div class="text-right">
-                                                <p class="text-2xl font-bold">89€</p>
+                                                <p class="text-2xl font-bold"><?= $rental['price'] ?>$</p>
                                                 <p class="text-gray-600 text-sm">par nuit</p>
                                             </div>
                                         </div>
                                         
                                         <div class="grid grid-cols-3 gap-4 mt-4">
                                             <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-blue-600">78%</p>
+                                                <p class="text-2xl font-bold text-blue-600">0%</p>
                                                 <p class="text-sm text-gray-600">Occupation</p>
                                             </div>
                                             <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-green-600">12</p>
+                                                <p class="text-2xl font-bold text-green-600">0</p>
                                                 <p class="text-sm text-gray-600">Réservations</p>
                                             </div>
                                             <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-purple-600">3,210€</p>
+                                                <p class="text-2xl font-bold text-purple-600">0$</p>
                                                 <p class="text-sm text-gray-600">Revenus</p>
                                             </div>
                                         </div>
@@ -280,6 +268,21 @@ session_start();
                                                 <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
                                                     <i class="fas fa-calendar-alt mr-1"></i> Calendrier
                                                 </button>
+                                                
+                                                <?php
+                                                if($rental['statut'] === 'inactive'){
+                                                ?>
+                                                <button data-id="<?= $rental['id'] ?>" class="change-statut inactive px-4 py-2 bg-green-400 text-white rounded-lg hover:bg-green-500 transition">
+                                                    Activer
+                                                </button>
+                                                <?php
+                                                } else {
+                                                ?>
+                                                <button data-id="<?= $rental['id'] ?>" class="change-statut active px-4 py-2 bg-red-400 text-white rounded-lg hover:bg-red-500 transition">
+                                                    Desactiver
+                                                </button>
+                                                <?php }
+                                                ?>
                                             </div>
                                             <div class="relative group">
                                                 <button class="h-10 w-10 flex items-center justify-center rounded-full hover:bg-gray-100">
@@ -305,167 +308,14 @@ session_start();
                                     </div>
                                 </div>
                             </div>
-                            
-                            <!-- Rental 2 -->
-                            <div class="bg-white rounded-xl shadow overflow-hidden">
-                                <div class="flex">
-                                    <div class="w-48 relative">
-                                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                                             alt="Chalet montagne" class="h-full w-full object-cover">
-                                        <div class="absolute top-2 left-2">
-                                            <span class="bg-green-600 text-white text-xs font-bold px-2 py-1 rounded">EN LIGNE</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex-1 p-6">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <h4 class="font-bold text-lg">Chalet cosy en montagne</h4>
-                                                <p class="text-gray-600 text-sm">
-                                                    <i class="fas fa-map-marker-alt mr-1"></i>Chamonix, Haute-Savoie
-                                                </p>
-                                                <div class="flex items-center mt-2">
-                                                    <div class="flex text-yellow-400">
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                    </div>
-                                                    <span class="ml-2 font-bold">5.0</span>
-                                                    <span class="ml-1 text-gray-600">(18 avis)</span>
-                                                </div>
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-2xl font-bold">145€</p>
-                                                <p class="text-gray-600 text-sm">par nuit</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="grid grid-cols-3 gap-4 mt-4">
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-blue-600">92%</p>
-                                                <p class="text-sm text-gray-600">Occupation</p>
-                                            </div>
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-green-600">24</p>
-                                                <p class="text-sm text-gray-600">Réservations</p>
-                                            </div>
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-purple-600">8,540€</p>
-                                                <p class="text-sm text-gray-600">Revenus</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="flex justify-between items-center mt-6">
-                                            <div class="flex space-x-2">
-                                                <button class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition">
-                                                    <i class="fas fa-eye mr-1"></i> Voir
-                                                </button>
-                                                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                                    <i class="fas fa-edit mr-1"></i> Modifier
-                                                </button>
-                                                <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
-                                                    <i class="fas fa-calendar-alt mr-1"></i> Calendrier
-                                                </button>
-                                            </div>
-                                            <div class="relative group">
-                                                <button class="h-10 w-10 flex items-center justify-center rounded-full hover:bg-gray-100">
-                                                    <i class="fas fa-ellipsis-v text-gray-600"></i>
-                                                </button>
-                                                <div class="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg py-2 hidden group-hover:block z-10">
-                                                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                                        <i class="fas fa-chart-bar mr-2"></i>Statistiques
-                                                    </a>
-                                                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                                        <i class="fas fa-images mr-2"></i>Photos
-                                                    </a>
-                                                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                                        <i class="fas fa-copy mr-2"></i>Dupliquer
-                                                    </a>
-                                                    <hr class="my-1">
-                                                    <a href="#" class="block px-4 py-2 text-red-600 hover:bg-red-50">
-                                                        <i class="fas fa-trash mr-2"></i>Supprimer
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Rental 3 -->
-                            <div class="bg-white rounded-xl shadow overflow-hidden">
-                                <div class="flex">
-                                    <div class="w-48 relative">
-                                        <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" 
-                                             alt="Studio Bordeaux" class="h-full w-full object-cover">
-                                        <div class="absolute top-2 left-2">
-                                            <span class="bg-gray-600 text-white text-xs font-bold px-2 py-1 rounded">INACTIF</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex-1 p-6">
-                                        <div class="flex justify-between items-start">
-                                            <div>
-                                                <h4 class="font-bold text-lg">Studio centre-ville Bordeaux</h4>
-                                                <p class="text-gray-600 text-sm">
-                                                    <i class="fas fa-map-marker-alt mr-1"></i>Bordeaux, Centre-ville
-                                                </p>
-                                                <div class="flex items-center mt-2">
-                                                    <div class="flex text-yellow-400">
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star"></i>
-                                                        <i class="fas fa-star-half-alt"></i>
-                                                    </div>
-                                                    <span class="ml-2 font-bold">4.6</span>
-                                                    <span class="ml-1 text-gray-600">(31 avis)</span>
-                                                </div>
-                                            </div>
-                                            <div class="text-right">
-                                                <p class="text-2xl font-bold">67€</p>
-                                                <p class="text-gray-600 text-sm">par nuit</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="grid grid-cols-3 gap-4 mt-4">
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-blue-600">45%</p>
-                                                <p class="text-sm text-gray-600">Occupation</p>
-                                            </div>
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-green-600">6</p>
-                                                <p class="text-sm text-gray-600">Réservations</p>
-                                            </div>
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-purple-600">1,240€</p>
-                                                <p class="text-sm text-gray-600">Revenus</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="flex justify-between items-center mt-6">
-                                            <div class="flex space-x-2">
-                                                <button class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition">
-                                                    <i class="fas fa-eye mr-1"></i> Voir
-                                                </button>
-                                                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                                    <i class="fas fa-edit mr-1"></i> Modifier
-                                                </button>
-                                                <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
-                                                    <i class="fas fa-calendar-alt mr-1"></i> Calendrier
-                                                </button>
-                                            </div>
-                                            <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition">
-                                                <i class="fas fa-power-off mr-1"></i> Activer
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php
+                            }
+                            ?>
                         </div>
+                           
                         
                         <!-- Empty State -->
-                        <div class="mt-8 text-center p-8 bg-white rounded-xl shadow">
+                        <!-- <div class="mt-8 text-center p-8 bg-white rounded-xl shadow">
                             <div class="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
                                 <i class="fas fa-home text-blue-600 text-2xl"></i>
                             </div>
@@ -474,7 +324,7 @@ session_start();
                             <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition">
                                 <i class="fas fa-plus mr-2"></i> Publier un nouveau logement
                             </button>
-                        </div>
+                        </div> -->
                     </div>
                     
                     <!-- Right Column: Sidebar -->
@@ -485,23 +335,23 @@ session_start();
                             <div class="space-y-4">
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Logements actifs</span>
-                                    <span class="font-bold">2/3</span>
+                                    <span class="font-bold">-/-</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Nouveaux messages</span>
-                                    <span class="font-bold text-blue-600">3</span>
+                                    <span class="font-bold text-blue-600">0</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Réservations à venir</span>
-                                    <span class="font-bold">5</span>
+                                    <span class="font-bold">0</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Avis en attente</span>
-                                    <span class="font-bold">2</span>
+                                    <span class="font-bold">0</span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Paiements en attente</span>
-                                    <span class="font-bold text-green-600">1,245€</span>
+                                    <span class="font-bold text-green-600">0$</span>
                                 </div>
                             </div>
                             <div class="mt-6 pt-4 border-t">
@@ -518,111 +368,265 @@ session_start();
                                 <a href="#" class="text-blue-600 text-sm">Voir tout</a>
                             </div>
                             <div class="space-y-4">
-                                <div class="p-3 border border-gray-200 rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="font-medium">Sophie Laurent</p>
-                                            <p class="text-sm text-gray-600">Appartement Paris</p>
-                                        </div>
-                                        <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">Confirmé</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600 mt-2">
-                                        <i class="fas fa-calendar mr-1"></i>
-                                        <span>15 - 20 oct. 2023</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="p-3 border border-gray-200 rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="font-medium">Thomas Bernard</p>
-                                            <p class="text-sm text-gray-600">Chalet Chamonix</p>
-                                        </div>
-                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">En cours</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600 mt-2">
-                                        <i class="fas fa-calendar mr-1"></i>
-                                        <span>22 - 29 oct. 2023</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="p-3 border border-gray-200 rounded-lg">
-                                    <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="font-medium">Julie Martin</p>
-                                            <p class="text-sm text-gray-600">Studio Bordeaux</p>
-                                        </div>
-                                        <span class="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">Annulé</span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600 mt-2">
-                                        <i class="fas fa-calendar mr-1"></i>
-                                        <span>5 - 12 nov. 2023</span>
-                                    </div>
-                                </div>
+                           
                             </div>
                         </div>
                         
-                        <!-- Performance Tips -->
-                        <div class="bg-blue-50 border border-blue-200 rounded-xl p-6">
-                            <h4 class="font-bold text-lg mb-3 text-blue-800">Conseils de performance</h4>
-                            <ul class="space-y-3">
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                    <span class="text-sm">Répondez rapidement aux demandes (taux de réponse: 95%)</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
-                                    <span class="text-sm">Maintenez un taux d'annulation bas (actuellement 2%)</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-exclamation-circle text-yellow-500 mt-1 mr-2"></i>
-                                    <span class="text-sm">Ajoutez plus de photos à votre studio Bordeaux</span>
-                                </li>
-                                <li class="flex items-start">
-                                    <i class="fas fa-lightbulb text-blue-500 mt-1 mr-2"></i>
-                                    <span class="text-sm">Ajustez vos prix pour les weekends</span>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-        
-        
+         <!-- Modal Overlay -->
+  <div id="add-rental-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center pt-10 justify-center overlay" aria-hidden="true">
+
+    <!-- Modal Box -->
+    <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6">
+
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-gray-800">
+          Add New Rental
+        </h2>
+        <span id="close-add-rental-modal" class="text-gray-400 text-xl cursor-pointer">&times;</span>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-4" action ="../services/add-rentals.php" enctype="multipart/form-data" method="post">
+
+        <!-- Title -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            Rental Title
+          </label>
+          <input
+            type="text"
+            name="title"
+            placeholder="e.g. Cozy apartment in city center"
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            Description
+          </label>
+          <textarea
+            rows="3"
+            name="description"
+            placeholder="Describe the rental..."
+            class="w-full mt-1 px-3 py-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          ></textarea>
+        </div>
+
+        <!-- Price -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            Price per Night (USD)
+          </label>
+          <input
+            type="number"
+            name="price"
+            step="0.01"
+            placeholder="30"
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+
+        <!-- Location -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+        Country
+          </label>
+          <input
+            type="text"
+            name ="country"
+            placeholder="Country"
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+        City
+          </label>
+          <input
+            type="text"
+            name="city"
+            placeholder="City"
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+        Adress
+          </label>
+          <input
+            type="text"
+            name = "adress"
+            placeholder="Adress"
+            class="w-full mt-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+        </div>
+<!-- Photo Upload -->
+<div>
+  <label class="block text-sm font-medium text-gray-700 mb-1">
+    Rental Photo
+  </label>
+  <!-- Upload Box -->
+  <label
+    class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-lg cursor-pointer
+           border-gray-300 bg-gray-50 hover:bg-gray-100 transition"
+  >
+    <div class="flex flex-col items-center justify-center text-center">
+      <!-- Icon -->
+      <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M7 16V4a1 1 0 011-1h8a1 1 0 011 1v12M5 20h14a2 2 0 002-2v-2H3v2a2 2 0 002 2z"/>
+      </svg>
+
+      <p class="text-sm text-gray-600">
+        <span class="font-semibold">Click to upload</span>l
+      <p class="text-xs text-gray-500">
+        PNG, JPG (max 5MB)
+      </p>
+    </div>
+
+    <!-- Hidden Input -->
+    <input
+      type="file"
+      name ="img"
+      class="hidden"
+      multiple
+      accept="image/*"
+    />
+  </label>
+</div>
+        <!-- Buttons -->
+        <div class="flex justify-end gap-3 pt-4">
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg border text-gray-600 hover:bg-gray-100"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            class="px-5 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+          >
+            Add Rental
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+<!-- Overlay -->
+<div id="activateRentalModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 overlay" aria-hidden="true">
+
+  <!-- Modal Box -->
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
     
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-gray-800">Change Rental Status</h2>
+      <button class="text-gray-400 hover:text-gray-600">✕</button>
+    </div>
+
+    <!-- Content -->
+    <p class="text-gray-600 mb-6">
+      Are you sure you want to <span class="font-semibold text-gray-800">activer</span> this rental?
+    </p>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3">
+      <button
+        class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
+        Cancel
+      </button>
+
+      <!-- Activate -->
+      <form method="POST" action="../services/change-rental-statut.php?action=activate">
+        <input id="activate-rental-id" type="hidden" name="rental_id">
+        <button type="submit"
+          class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700">
+          Activer
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<div id="deactivateRentalModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 overlay" aria-hidden="true">
+
+  <!-- Modal Box -->
+  <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-gray-800">Change Rental Status</h2>
+      <button class="text-gray-400 hover:text-gray-600">✕</button>
+    </div>
+
+    <!-- Content -->
+    <p class="text-gray-600 mb-6">
+      Are you sure you want to <span class="font-semibold text-gray-800">desactiver</span> this rental?
+    </p>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3">
+      <button
+        class="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100">
+        Cancel
+      </button>
+
+      <!-- Deactivate -->
+      <form method="POST" action="../services/change-rental-statut.php?action=deactivate">
+        <input id="deactivate-rental-id" type="hidden" name="rental_id">
+        <button type="submit"
+          class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700">
+          Desactiver
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
     <!-- JavaScript for interactivity -->
-    <script>
-        // Toggle dropdown menus
-        document.addEventListener('DOMContentLoaded', function() {
-            // Mobile menu toggle (if needed)
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const mobileMenu = document.getElementById('mobile-menu');
+    <script src="../assets/script.js">
+        // // Toggle dropdown menus
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     // Mobile menu toggle (if needed)
+        //     const mobileMenuButton = document.getElementById('mobile-menu-button');
+        //     const mobileMenu = document.getElementById('mobile-menu');
             
-            if (mobileMenuButton && mobileMenu) {
-                mobileMenuButton.addEventListener('click', function() {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
+        //     if (mobileMenuButton && mobileMenu) {
+        //         mobileMenuButton.addEventListener('click', function() {
+        //             mobileMenu.classList.toggle('hidden');
+        //         });
+        //     }
             
-            // Make all dropdowns work
-            const dropdownButtons = document.querySelectorAll('.group button');
-            dropdownButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const dropdown = this.nextElementSibling;
-                    dropdown.classList.toggle('hidden');
-                });
-            });
+        //     // Make all dropdowns work
+        //     const dropdownButtons = document.querySelectorAll('.group button');
+        //     dropdownButtons.forEach(button => {
+        //         button.addEventListener('click', function(e) {
+        //             e.stopPropagation();
+        //             const dropdown = this.nextElementSibling;
+        //             dropdown.classList.toggle('hidden');
+        //         });
+        //     });
             
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function() {
-                document.querySelectorAll('.group .hidden').forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-            });
-        });
+        //     // Close dropdowns when clicking outside
+        //     document.addEventListener('click', function() {
+        //         document.querySelectorAll('.group .hidden').forEach(dropdown => {
+        //             dropdown.classList.add('hidden');
+        //         });
+        //     });
+        // });
     </script>
 </body>
 </html>

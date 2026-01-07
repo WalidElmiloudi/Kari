@@ -2,16 +2,16 @@
 
 namespace Entities;
 
-require 'vendor/autoload.php';
-
 use Entities\User;
+use Core\Database;
 use PDO;
 
 class Host extends User
 {
-    public function getAllRentals(): array
+    public static function getAllRentals($user_id): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM rentals WHERE user_id = $this->id");
+        $pdo = Database::getInstance();
+        $stmt = $pdo->query("SELECT * FROM rentals WHERE user_id = $user_id");
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }

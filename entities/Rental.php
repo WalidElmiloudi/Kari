@@ -2,42 +2,47 @@
 
 namespace Entities;
 
-require 'vendor/autoload.php';
-
 use Core\Database;
 
 use PDO;
 
 class Rental
 {
+    private string $title;
+    private string $description;
     private string $country;
     private string $city;
+    private string $adress;
     private float $price;
     private string $img;
     private string $statut;
     private int $user_id;
     private PDO $pdo;
 
-    public function __construct($country,$city,$price,$img,$statut,$user_id)
+    public function __construct($title,$description,$country,$city,$adress,$price,$img,$user_id)
     {
+        $this->title = $title;
+        $this->description = $description;
         $this->country = $country;
         $this->city = $city;
+        $this->adress = $adress;
         $this->price = $price;
         $this->img = $img;
-        $this->statut = $statut;
         $this->user_id = $user_id;
         $this->pdo = Database::getInstance();
     }
 
     public function add(): bool
     {
-        $stmt = $this->pdo->prepare("INSERT INTO rentals (country,city,price,img,statut,user_id) VALUES (:country,:city,:price,:img,:statut,:user_id)");
+        $stmt = $this->pdo->prepare("INSERT INTO rentals (title,description,country,city,adress,price,img,user_id) VALUES (:title,:description,:country,:city,:adress,:price,:img,:user_id)");
         $stmt->execute([
+            ':title' => $this->title,
+            ':description' => $this->description,
             ':country' => $this->country,
             ':city' => $this->city,
+            ':adress' => $this->adress,
             ':price' => $this->price,
             ':img' => $this->img,
-            ':statut' => $this->statut,
             ':user_id' => $this->user_id
         ]);
         return true;
@@ -65,8 +70,21 @@ class Rental
 
     public function dispalyAll(): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM rentals");
+        $stmt = $this->pdo->query("SELECT * FROM rentals WHERE statut = 'active'");
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results;
     }
+
+    public function activateRental($rental_id): bool
+    {
+        $this->pdo->query("UPDATE rentals SET statut = 'active' WHERE id = $rental_id");
+        return true;
+    }
+
+    public function deactivateRental($rental_id): bool
+    {
+        $this->pdo->query("UPDATE rentals SET statut = 'inactive' WHERE id = $rental_id");
+        return true;
+    }
+
 }

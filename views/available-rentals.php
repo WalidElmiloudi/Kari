@@ -151,7 +151,7 @@ session_start();
                 
                 <!-- Rentals Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Rental Card 1 -->
+                    <!-- Rental Card 1
                     <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
                         <div class="relative">
                             <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
@@ -183,111 +183,10 @@ session_start();
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Rental Card 2 -->
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
-                        <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                                 alt="Chalet montagne" class="w-full h-48 object-cover">
-                            <button class="absolute top-3 right-3 text-white text-xl">
-                                <i class="fas fa-heart text-red-500"></i>
-                            </button>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-bold text-lg">Chalet cosy en montagne</h3>
-                                    <p class="text-gray-600 text-sm">Chamonix, Auvergne-Rhône-Alpes</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                    <span class="font-bold">4.92</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-500 text-sm mt-2">6 voyageurs · 3 chambres · 4 lits · 2 salles de bain</p>
-                            <div class="flex justify-between items-center mt-4">
-                                <div>
-                                    <span class="font-bold text-lg">145€</span>
-                                    <span class="text-gray-600"> / nuit</span>
-                                </div>
-                                <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
-                                    Réserver
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Rental Card 3 -->
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
-                        <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
-                                 alt="Villa bord de mer" class="w-full h-48 object-cover">
-                            <button class="absolute top-3 right-3 text-white text-xl">
-                                <i class="far fa-heart"></i>
-                            </button>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-bold text-lg">Villa avec piscine à Nice</h3>
-                                    <p class="text-gray-600 text-sm">Nice, Provence-Alpes-Côte d'Azur</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                    <span class="font-bold">4.78</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-500 text-sm mt-2">8 voyageurs · 4 chambres · 6 lits · 3 salles de bain</p>
-                            <div class="flex justify-between items-center mt-4">
-                                <div>
-                                    <span class="font-bold text-lg">210€</span>
-                                    <span class="text-gray-600"> / nuit</span>
-                                </div>
-                                <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
-                                    Réserver
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Rental Card 4 -->
-                    <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
-                        <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1480&q=80" 
-                                 alt="Studio Bordeaux" class="w-full h-48 object-cover">
-                            <button class="absolute top-3 right-3 text-white text-xl">
-                                <i class="far fa-heart"></i>
-                            </button>
-                            <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">SUPERHÔTE</div>
-                        </div>
-                        <div class="p-4">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-bold text-lg">Studio centre-ville Bordeaux</h3>
-                                    <p class="text-gray-600 text-sm">Bordeaux, Nouvelle-Aquitaine</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                    <span class="font-bold">4.65</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-500 text-sm mt-2">2 voyageurs · 1 chambre · 1 lit · 1 salle de bain</p>
-                            <div class="flex justify-between items-center mt-4">
-                                <div>
-                                    <span class="font-bold text-lg">67€</span>
-                                    <span class="text-gray-600"> / nuit</span>
-                                </div>
-                                <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
-                                    Réserver
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
+                    </div>-->
+                                    
                 <!-- Pagination -->
-                <div class="flex justify-center mt-10">
+                <!-- <div class="flex justify-center mt-10">
                     <nav class="flex items-center space-x-2">
                         <button class="h-10 w-10 flex items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-100">
                             <i class="fas fa-chevron-left"></i>
@@ -301,7 +200,7 @@ session_start();
                             <i class="fas fa-chevron-right"></i>
                         </button>
                     </nav>
-                </div>
+                </div> -->
             </div>
         </section>
 <!-- Footer -->

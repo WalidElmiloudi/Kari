@@ -18,18 +18,21 @@ CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(20) NOT NULL,
   email VARCHAR(30) UNIQUE,
   password VARCHAR(255),
-  statut ENUM('active','blocked') DEFAULT 'active',
+  statut ENUM('active','inactive') DEFAULT 'active',
   role_id INT,
   FOREIGN KEY (role_id) REFERENCES roles(id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS rentals (
   id INT PRIMARY KEY AUTO_INCREMENT,
+  title VARCHAR(255),
+  description TEXT,
   country VARCHAR(15),
   city VARCHAR(15),
+  adress VARCHAR(255),
   price DECIMAL(10,2),
   img VARCHAR(100),
-  statut ENUM('active','blocked'),
+  statut ENUM('active','inactive') DEFAULT 'inactive',
   user_id INT,
   FOREIGN KEY (user_id) REFERENCES users(id)
 )
