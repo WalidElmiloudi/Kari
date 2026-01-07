@@ -1,5 +1,14 @@
 <?php
 session_start();
+
+require '../vendor/autoload.php';
+
+use Core\Database;
+use Entities\Rental;
+
+$pdo = Database::getInstance();
+
+$rentals = Rental::dispalyAll($pdo);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -151,31 +160,31 @@ session_start();
                 
                 <!-- Rentals Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Rental Card 1
+                <?php
+                foreach($rentals as $rental) {
+                ?>
                     <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
                         <div class="relative">
-                            <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                            <img src="<?= $rental['img'] ?>" 
                                  alt="Appartement moderne" class="w-full h-48 object-cover">
                             <button class="absolute top-3 right-3 text-white text-xl">
                                 <i class="far fa-heart"></i>
                             </button>
-                            <div class="absolute top-3 left-3 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">SUPERHÔTE</div>
                         </div>
                         <div class="p-4">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <h3 class="font-bold text-lg">Appartement moderne à Paris</h3>
-                                    <p class="text-gray-600 text-sm">Paris, Île-de-France</p>
+                                    <h3 class="font-bold text-lg"><?= $rental['title'] ?></h3>
+                                    <p class="text-gray-600 text-sm"><?= $rental['city'] ?>, <?= $rental['adress'] ?></p>
                                 </div>
                                 <div class="flex items-center">
                                     <i class="fas fa-star text-yellow-400 mr-1"></i>
-                                    <span class="font-bold">4.85</span>
+                                    <span class="font-bold">4.85/5</span>
                                 </div>
                             </div>
-                            <p class="text-gray-500 text-sm mt-2">2 voyageurs · 1 chambre · 1 lit · 1 salle de bain</p>
                             <div class="flex justify-between items-center mt-4">
                                 <div>
-                                    <span class="font-bold text-lg">89€</span>
+                                    <span class="font-bold text-lg"><?= $rental['price'] ?>$</span>
                                     <span class="text-gray-600"> / nuit</span>
                                 </div>
                                 <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
@@ -183,8 +192,11 @@ session_start();
                                 </button>
                             </div>
                         </div>
-                    </div>-->
-                                    
+                 
+                    </div>
+                                  <?php
+                }
+                        ?>         
                 <!-- Pagination -->
                 <!-- <div class="flex justify-center mt-10">
                     <nav class="flex items-center space-x-2">

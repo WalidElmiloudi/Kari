@@ -68,10 +68,10 @@ class Rental
         return true;
     }
 
-    public function dispalyAll(): array
+    public static function dispalyAll($pdo): array
     {
-        $stmt = $this->pdo->query("SELECT * FROM rentals WHERE statut = 'active'");
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $pdo->query("SELECT * FROM rentals WHERE statut = 'active'");
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $results;
     }
 

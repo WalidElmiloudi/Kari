@@ -3,9 +3,14 @@ session_start();
 
 require '../vendor/autoload.php';
 
+use Core\Database;
 use Entities\Host;
 
-$rentals = Host::getAllRentals($_SESSION['userID']);
+$pdo = Database::getInstance();
+
+$rentals = Host::getAllRentals($pdo,$_SESSION['userID']);
+$rentals_count = Host::getRentalsCount($pdo,$_SESSION['userID']);
+$active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -61,25 +66,6 @@ $rentals = Host::getAllRentals($_SESSION['userID']);
                                     class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
                                     <i class="fas fa-user-circle mr-2"></i>Mon profil
                                 </a>
-                                <?php
-                                 switch($_SESSION['role']){
-                                    case 'travler' : echo '<a href="reservations.php"
-                                                           class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                                           <i class="fas fa-calendar-check mr-2"></i>Mes réservations
-                                                           </a>';
-                                                     break;
-                                    case 'host'    : echo '<a href="rentals.php"
-                                                           class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                                           <i class="fas fa-home mr-2"></i>Mes logements
-                                                           </a>';
-                                                     break;
-                                    case 'admin'   : echo '<a href="admin-dashboard.php"
-                                                           class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">
-                                                           <i class="fas fa-cog mr-2"></i>Administration
-                                                           </a>';
-                                                     break;
-                                 }
-                                ?>
                                 <hr class="my-1">
                                 <a href="../repositories/logout.php?target=index"
                                     class="block px-4 py-2 text-red-600 hover:bg-red-50">
@@ -335,7 +321,7 @@ $rentals = Host::getAllRentals($_SESSION['userID']);
                             <div class="space-y-4">
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Logements actifs</span>
-                                    <span class="font-bold">-/-</span>
+                                    <span class="font-bold"><?= $active_rentals_count['active_rentals'] ?>/<?= $rentals_count['total_rentals'] ?></span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Nouveaux messages</span>
