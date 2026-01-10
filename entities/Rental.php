@@ -87,4 +87,11 @@ class Rental
         return true;
     }
 
+    public static function getCheckInAndCheckOutDates($pdo,$rental_id): array
+    {
+        $stmt = $pdo->query("SELECT start_date,end_date FROM bookings WHERE rental_id = $rental_id AND statut = 'active'");
+        $results = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $results;
+    }
+
 }

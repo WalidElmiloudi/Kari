@@ -52,8 +52,6 @@
                         <a href="favorites.php" class="text-gray-700 hover:text-blue-600 transition">Favoris</a>
                         <a href="#notifications" class="text-gray-700 hover:text-blue-600 transition relative">
                             <i class="far fa-bell"></i>
-                            <span
-                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                         </a>
 
                         <!-- User Menu -->

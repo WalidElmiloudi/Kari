@@ -130,43 +130,15 @@ session_start();
                                 <div class="pt-8">
                                     <h2 class="text-2xl font-bold"><?= $_SESSION['name'] ?></h2>
                                     <p class="text-gray-600"><?= ucfirst($_SESSION['role']) ?></p>
-                                    <!-- <div class="flex items-center mt-2">
-                                        <i class="fas fa-map-marker-alt text-gray-400 mr-2"></i>
-                                        <span>Paris, France</span>
-                                        <i class="fas fa-star text-yellow-400 ml-4 mr-1"></i>
-                                        <span class="font-medium">4.9</span>
-                                        <span class="text-gray-600 ml-1">(12 avis)</span>
-                                    </div> -->
                                 </div>
-                                <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition">
+                                <!-- <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition">
                                     <i class="fas fa-edit mr-2"></i> Modifier
-                                </button>
+                                </button> -->
                             </div>
                         </div>
                         
                         <!-- Profile Tabs -->
-                        <div class="border-t">
-                            <!-- <div class="flex overflow-x-auto">
-                                <button class="px-6 py-4 border-b-2 border-blue-600 text-blue-600 font-medium whitespace-nowrap">
-                                    <i class="fas fa-user-circle mr-2"></i>Profil
-                                </button>
-                                <button class="px-6 py-4 border-b-2 border-transparent text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap">
-                                    <i class="fas fa-calendar-check mr-2"></i>Réservations
-                                </button>
-                                <button class="px-6 py-4 border-b-2 border-transparent text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap">
-                                    <i class="fas fa-home mr-2"></i>Mes logements
-                                </button>
-                                <button class="px-6 py-4 border-b-2 border-transparent text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap">
-                                    <i class="fas fa-heart mr-2"></i>Favoris
-                                </button>
-                                <button class="px-6 py-4 border-b-2 border-transparent text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap">
-                                    <i class="fas fa-comment-alt mr-2"></i>Avis
-                                </button>
-                                <button class="px-6 py-4 border-b-2 border-transparent text-gray-600 hover:text-blue-600 font-medium whitespace-nowrap">
-                                    <i class="fas fa-cog mr-2"></i>Paramètres
-                                </button>
-                            </div> -->
-                            
+                        <div class="border-t">                            
                             <!-- Profile Content -->
                             <div class="p-8">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -184,63 +156,7 @@ session_start();
                                             </div>
                                         </div>
                                         
-                                        <h3 class="text-xl font-bold mt-8 mb-4">Préférences de notifications</h3>
-                                        <div class="space-y-3">
-                                            <label class="flex items-center">
-                                                <input type="checkbox" class="mr-2" checked>
-                                                <span>Nouvelles réservations</span>
-                                            </label>
-                                            <label class="flex items-center">
-                                                <input type="checkbox" class="mr-2" checked>
-                                                <span>Messages des voyageurs</span>
-                                            </label>
-                                            <label class="flex items-center">
-                                                <input type="checkbox" class="mr-2">
-                                                <span>Promotions et offres spéciales</span>
-                                            </label>
-                                        </div>
                                     </div>
-                                    
-                                    <!-- Right Column -->
-                                    <!-- <div>
-                                        <h3 class="text-xl font-bold mb-4">Statistiques</h3>
-                                        <div class="space-y-4">
-                                            <div class="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-                                                <span>Voyages effectués</span>
-                                                <span class="font-bold text-lg">8</span>
-                                            </div>
-                                            <div class="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                                                <span>Logements publiés</span>
-                                                <span class="font-bold text-lg">2</span>
-                                            </div>
-                                            <div class="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-                                                <span>Réservations reçues</span>
-                                                <span class="font-bold text-lg">24</span>
-                                            </div>
-                                            <div class="flex justify-between items-center p-4 bg-yellow-50 rounded-lg">
-                                                <span>Note moyenne</span>
-                                                <span class="font-bold text-lg">4.9</span>
-                                            </div>
-                                        </div>
-                                        
-                                        <h3 class="text-xl font-bold mt-8 mb-4">Avis récents</h3>
-                                        <div class="space-y-4">
-                                            <div class="p-4 border border-gray-200 rounded-lg">
-                                                <div class="flex justify-between mb-2">
-                                                    <div class="font-medium">Jean Martin</div>
-                                                    <div class="flex">
-                                                        <i class="fas fa-star text-yellow-400"></i>
-                                                        <i class="fas fa-star text-yellow-400"></i>
-                                                        <i class="fas fa-star text-yellow-400"></i>
-                                                        <i class="fas fa-star text-yellow-400"></i>
-                                                        <i class="fas fa-star text-yellow-400"></i>
-                                                    </div>
-                                                </div>
-                                                <p class="text-gray-600 text-sm">"Marie est une hôte exceptionnelle, je recommande vivement !"</p>
-                                                <p class="text-gray-400 text-xs mt-2">15 juin 2023</p>
-                                            </div>
-                                        </div>
-                                    </div> -->
                                 </div>
                             </div>
                         </div>

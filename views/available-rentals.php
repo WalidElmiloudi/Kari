@@ -5,9 +5,12 @@ require '../vendor/autoload.php';
 
 use Core\Database;
 use Entities\Rental;
+use Entities\Favorite;
 
 $pdo = Database::getInstance();
-
+if(isset($_SESSION['userID'])){
+    $user_id = $_SESSION['userID'];
+}
 $rentals = Rental::dispalyAll($pdo);
 ?>
 <!DOCTYPE html>
@@ -58,8 +61,6 @@ $rentals = Rental::dispalyAll($pdo);
                         <a href="favorites.php" class="text-gray-700 hover:text-blue-600 transition">Favoris</a>
                         <a href="#notifications" class="text-gray-700 hover:text-blue-600 transition relative">
                             <i class="far fa-bell"></i>
-                            <span
-                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                         </a>
 
                         <!-- User Menu -->
@@ -129,7 +130,6 @@ $rentals = Rental::dispalyAll($pdo);
                 <a href="#host" class="text-gray-700 hover:text-blue-600 py-2">Devenir hôte</a>
                 <a href="#notifications" class="text-gray-700 hover:text-blue-600 py-2">
                     <i class="far fa-bell mr-2"></i>Notifications
-                    <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">3</span>
                 </a>
                 <hr>
                 <a href="#profile" class="text-gray-700 hover:text-blue-600 py-2">
@@ -147,7 +147,7 @@ $rentals = Rental::dispalyAll($pdo);
     <section id="explorer" class="py-12 bg-gray-50">
             <div class="container mx-auto px-4">
                 <div class="flex justify-between items-center mb-8">
-                    <h2 class="text-3xl font-bold">Logements populaires</h2>
+                    <h2 class="text-3xl font-bold">Logements Available</h2>
                     <div class="flex space-x-2">
                         <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100">
                             <i class="fas fa-filter mr-2"></i>Filtrer
@@ -162,14 +162,30 @@ $rentals = Rental::dispalyAll($pdo);
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 <?php
                 foreach($rentals as $rental) {
+                    if(isset($user_id)){
+                        $favorite = new Favorite($rental['id'],$user_id);
+                        $is_favorited = $favorite->isFavorite();  
+                    }
                 ?>
                     <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
                         <div class="relative">
                             <img src="<?= $rental['img'] ?>" 
                                  alt="Appartement moderne" class="w-full h-48 object-cover">
-                            <button class="absolute top-3 right-3 text-white text-xl">
+                                 <?php
+                                if(isset($is_favorited) && $is_favorited) {
+                                    ?>
+                                <a href="../services/favorites-handler.php?action=delete&rental_id=<?= $rental['id'] ?>&target=available-rentals" class="absolute top-3 right-3 text-white text-xl">
+                                <i class="fas fa-heart text-red-600"></i>
+                                </a>
+                                <?php
+                                } else {
+                                ?>
+                                <a href="../services/favorites-handler.php?action=add&rental_id=<?= $rental['id'] ?>&target=available-rentals" class="absolute top-3 right-3 text-white text-xl">
                                 <i class="far fa-heart"></i>
-                            </button>
+                                </a>
+                                <?php 
+                                }    
+                                ?>
                         </div>
                         <div class="p-4">
                             <div class="flex justify-between items-start">
@@ -187,7 +203,7 @@ $rentals = Rental::dispalyAll($pdo);
                                     <span class="font-bold text-lg"><?= $rental['price'] ?>$</span>
                                     <span class="text-gray-600"> / nuit</span>
                                 </div>
-                                <button class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
+                                <button onclick="dispalyBookingModal('<?= $rental['title'] ?>',<?= $rental['price'] ?>,<?= $rental['id'] ?>,'available-rentals')" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition">
                                     Réserver
                                 </button>
                             </div>
@@ -284,29 +300,160 @@ $rentals = Rental::dispalyAll($pdo);
             </div>
         </div>
     </footer>
+    <section id="bookingModal">
 
-    <!-- Mobile Menu Toggle Script -->
-    <script>
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+    </section>
+    <!-- Modal de Connexion -->
+        <div id="loginModal"
+            class="overlay fixed inset-0 bg-black bg-opacity-50  z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
+                <!-- En-tête -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-gray-800">Connexion</h2>
+                        <button id="close-login" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">Connectez-vous à votre compte Kari</p>
+                </div>
 
-                  const userMenuButton = document.querySelector('.group button');
-            const userDropdown = document.querySelector('.group .hidden');
-            
-            if (userMenuButton && userDropdown) {
-                userMenuButton.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    userDropdown.classList.toggle('hidden');
-                });
-                
-                // Close dropdown when clicking elsewhere
-                document.addEventListener('click', () => {
-                    userDropdown.classList.add('hidden');
-                });
-            }
+                <!-- Formulaire -->
+                <form id="login-form" class="p-6" action="../repositories/login.php" method="post">
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Adresse email</label>
+                        <div class="relative">
+                            <input type="email" name="email" required
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="vous@exemple.com">
+                            <i class="fas fa-envelope absolute right-3 top-3.5 text-gray-400"></i>
+                        </div>
+                    </div>
 
-    </script>
+                    <!-- Mot de passe -->
+                    <div class="mb-6">
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="block text-sm font-medium text-gray-700">Mot de passe</label>
+                        </div>
+                        <div class="relative">
+                            <input type="password" name="password" required
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Votre mot de passe">
+                            <i class="fas fa-lock absolute right-3 top-3.5 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de connexion -->
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 mb-4">
+                        Se connecter
+                    </button>
+
+                    <!-- Lien vers inscription -->
+                    <div class="text-center">
+                        <p class="text-gray-600 text-sm">
+                            Vous n'avez pas de compte ?
+                            <button type="button" id="signupRedirectBtn"
+                                class="text-blue-600 hover:text-blue-800 font-medium">
+                                S'inscrire
+                            </button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal d'Inscription -->
+        <div id="signupModal"
+            class="overlay fixed inset-0 bg-black bg-opacity-50  z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md animate-fadeIn">
+                <!-- En-tête -->
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-2xl font-bold text-gray-800">Inscription</h2>
+                        <button id="close-register" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <p class="text-gray-600 text-sm mt-1">Rejoignez la communauté Kari</p>
+                </div>
+
+                <!-- Formulaire -->
+                <form id="register-form" class="p-6" action="../repositories/signup.php" method="post">
+                    <!-- Nom et Prénom -->
+                    <div class="flex flex-col gap-4 mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Votre Nom Complet</label>
+                        <input type="text" name="name" required
+                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="Jean Duhh">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Adresse email</label>
+                        <div class="relative">
+                            <input type="email" name="email" required
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="vous@exemple.com">
+                            <i class="fas fa-envelope absolute right-3 top-3.5 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Mot de passe -->
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+                        <div class="relative">
+                            <input type="password" name="password" required
+                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                placeholder="Créez un mot de passe">
+                            <i class="fas fa-lock absolute right-3 top-3.5 text-gray-400"></i>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Minimum 8 caractères avec chiffres et lettres</p>
+                    </div>
+
+                    <!-- Type de compte -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Je souhaite :</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label
+                                class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="roles" value="1" class="h-4 w-4 text-blue-600">
+                                <div class="ml-3">
+                                    <span class="block font-medium">Voyager</span>
+                                    <span class="block text-xs text-gray-500">Réserver des logements</span>
+                                </div>
+                            </label>
+                            <label
+                                class="flex items-center p-3 border border-gray-300 rounded-lg hover:bg-blue-50 cursor-pointer">
+                                <input type="radio" name="roles" value="2" class="h-4 w-4 text-blue-600">
+                                <div class="ml-3">
+                                    <span class="block font-medium">Être hôte</span>
+                                    <span class="block text-xs text-gray-500">Louer mon logement</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Bouton d'inscription -->
+                    <button type="submit"
+                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-300 mb-4">
+                        Créer mon compte
+                    </button>
+
+                    <!-- Lien vers connexion -->
+                    <div class="text-center">
+                        <p class="text-gray-600 text-sm">
+                            Vous avez déjà un compte ?
+                            <button type="button" id="loginRedirectBtn"
+                                class="text-blue-600 hover:text-blue-800 font-medium">
+                                Se connecter
+                            </button>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+     <script src="../assets/script.js"></script>
 </body>
 </html>

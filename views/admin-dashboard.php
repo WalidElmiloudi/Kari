@@ -1,5 +1,20 @@
 <?php
 session_start();
+
+require '../vendor/autoload.php';
+
+use Core\Database;
+use Entities\Admin;
+
+$pdo = Database::getInstance();
+$user_id = $_SESSION['userID'];
+
+$users_count = Admin::getUsersCount($pdo);
+$rentals_count = Admin::getActiveRentalsCount($pdo);
+$bookings_count = Admin::getBookingsCount($pdo);
+$users = Admin::getAllUsers($pdo);
+$rentals = Admin::getAllRentals($pdo);
+$bookings = Admin::getAllBookings($pdo);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -37,8 +52,6 @@ session_start();
                         <a href="favorites.php" class="text-gray-700 hover:text-blue-600 transition">Favoris</a>
                         <a href="#notifications" class="text-gray-700 hover:text-blue-600 transition relative">
                             <i class="far fa-bell"></i>
-                            <span
-                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                         </a>
 
                         <!-- User Menu -->
@@ -82,7 +95,6 @@ session_start();
             <div class="container mx-auto px-4 flex flex-col space-y-3">
                 <a href="#explorer" class="text-gray-700 hover:text-blue-600 py-2">Explorer</a>
                 <a href="#favorites" class="text-gray-700 hover:text-blue-600 py-2">Favoris</a>
-                <a href="#host" class="text-gray-700 hover:text-blue-600 py-2">Devenir hôte</a>
                 <a href="#notifications" class="text-gray-700 hover:text-blue-600 py-2">
                     <i class="far fa-bell mr-2"></i>Notifications
                     <span class="ml-2 bg-red-500 text-white text-xs rounded-full px-2 py-0.5">3</span>
@@ -119,14 +131,11 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Utilisateurs totaux</p>
-                                <p class="text-3xl font-bold">1,247</p>
+                                <p class="text-3xl font-bold"><?= $users_count ?></p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
                                 <i class="fas fa-users text-blue-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-green-600">
-                            <i class="fas fa-arrow-up mr-1"></i> 12% ce mois-ci
                         </div>
                     </div>
                     
@@ -134,14 +143,11 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Logements actifs</p>
-                                <p class="text-3xl font-bold">568</p>
+                                <p class="text-3xl font-bold"><?= $rentals_count ?></p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
                                 <i class="fas fa-home text-green-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-green-600">
-                            <i class="fas fa-arrow-up mr-1"></i> 8% ce mois-ci
                         </div>
                     </div>
                     
@@ -149,14 +155,11 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Réservations</p>
-                                <p class="text-3xl font-bold">3,892</p>
+                                <p class="text-3xl font-bold"><?= $bookings_count ?></p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
                                 <i class="fas fa-calendar-check text-purple-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-green-600">
-                            <i class="fas fa-arrow-up mr-1"></i> 23% ce mois-ci
                         </div>
                     </div>
                     
@@ -164,56 +167,15 @@ session_start();
                         <div class="flex items-center justify-between">
                             <div>
                                 <p class="text-gray-600">Revenus totaux</p>
-                                <p class="text-3xl font-bold">289,540€</p>
+                                <p class="text-3xl font-bold">-$</p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-yellow-100 flex items-center justify-center">
-                                <i class="fas fa-euro-sign text-yellow-600 text-xl"></i>
+                                <i class="fas fa-dollar-sign text-yellow-600 text-xl"></i>
                             </div>
-                        </div>
-                        <div class="mt-2 text-sm text-green-600">
-                            <i class="fas fa-arrow-up mr-1"></i> 15% ce mois-ci
                         </div>
                     </div>
                 </div>
-                
-                <!-- Quick Actions -->
-                <div class="mb-8">
-                    <h3 class="text-xl font-bold mb-4">Actions rapides</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <button class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow hover:shadow-md transition">
-                            <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-3">
-                                <i class="fas fa-user-check text-blue-600 text-xl"></i>
-                            </div>
-                            <span class="font-medium">Valider utilisateurs</span>
-                            <span class="text-sm text-gray-600">3 en attente</span>
-                        </button>
-                        
-                        <button class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow hover:shadow-md transition">
-                            <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-3">
-                                <i class="fas fa-home text-green-600 text-xl"></i>
-                            </div>
-                            <span class="font-medium">Modérer logements</span>
-                            <span class="text-sm text-gray-600">5 signalés</span>
-                        </button>
-                        
-                        <button class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow hover:shadow-md transition">
-                            <div class="h-12 w-12 rounded-full bg-red-100 flex items-center justify-center mb-3">
-                                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
-                            </div>
-                            <span class="font-medium">Réclamations</span>
-                            <span class="text-sm text-gray-600">7 non traitées</span>
-                        </button>
-                        
-                        <button class="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow hover:shadow-md transition">
-                            <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-3">
-                                <i class="fas fa-file-invoice-dollar text-purple-600 text-xl"></i>
-                            </div>
-                            <span class="font-medium">Rapport financier</span>
-                            <span class="text-sm text-gray-600">Générer le rapport</span>
-                        </button>
-                    </div>
-                </div>
-                
+
                 <!-- Main Sections Tabs -->
                 <div class="mb-6">
                     <div class="border-b border-gray-200">
@@ -227,9 +189,6 @@ session_start();
                             <button id="tab-reservations" class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap">
                                 <i class="fas fa-calendar-check mr-2"></i>Toutes les Réservations
                             </button>
-                            <button id="tab-complaints" class="tab-button py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap">
-                                <i class="fas fa-exclamation-triangle mr-2"></i>Réclamations
-                            </button>
                         </nav>
                     </div>
                 </div>
@@ -241,9 +200,6 @@ session_start();
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">Gestion des utilisateurs</h3>
                             <div class="flex space-x-3">
-                                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                    <i class="fas fa-download mr-2"></i>Exporter
-                                </button>
                                 <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                                     <i class="fas fa-user-plus mr-2"></i>Ajouter un admin
                                 </button>
@@ -264,8 +220,6 @@ session_start();
                                     <option>Tous les statuts</option>
                                     <option>Actif</option>
                                     <option>Inactif</option>
-                                    <option>Suspendu</option>
-                                    <option>En attente</option>
                                 </select>
                                 <button class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                                     <i class="fas fa-filter mr-2"></i>Filtrer
@@ -289,15 +243,14 @@ session_start();
                                                 Statut
                                             </th>
                                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Inscription
-                                            </th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Actions
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        <!-- User 1 -->
+                                        <?php
+                                        foreach($users as $user) {
+                                        ?>
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
@@ -305,124 +258,70 @@ session_start();
                                                         <i class="fas fa-user text-blue-600"></i>
                                                     </div>
                                                     <div>
-                                                        <div class="text-sm font-medium text-gray-900">Marie Dubois</div>
-                                                        <div class="text-sm text-gray-500">marie@email.com</div>
+                                                        <div class="text-sm font-medium text-gray-900"><?= $user['name'] ?></div>
+                                                        <div class="text-sm text-gray-500"><?= $user['email'] ?></div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                                    Hôte ⭐
-                                                </span>
+                                                <?php
+                                                switch($user['role_name']) {
+                                                    case 'travler' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                                                                           Voyageur
+                                                                           </span>';
+                                                                     break;
+                                                    case 'host' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                                                           Hôte
+                                                                           </span>';
+                                                                     break;
+                                                    case 'admin' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
+                                                                           Administrateur
+                                                                           </span>';
+                                                                     break;
+                                                }
+                                                ?>
+
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                                    Actif
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                15/06/2023
+                                                <?php
+                                                switch($user['statut']) {
+                                                    case 'active' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                                          Actif
+                                                                          </span>';
+                                                                    break;
+                                                    case 'inactive' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                                          Suspendée
+                                                                          </span>';
+                                                                    break;
+                                                }
+                                                ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
-                                                    <button class="text-blue-600 hover:text-blue-900">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="text-yellow-600 hover:text-yellow-900">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="text-red-600 hover:text-red-900 suspend-user" data-user="1">
-                                                        <i class="fas fa-ban"></i>
-                                                    </button>
+                                                <?php
+                                                switch($user['statut']) {
+                                                    case 'active' : echo '<button class="text-red-600 hover:text-red-900">
+                                                                          Suspender
+                                                                          </button>';
+                                                                    break;
+                                                    case 'inactive' : echo '<button class="text-green-600 hover:text-green-900">
+                                                                            Activer
+                                                                            </button>';
+                                                                    break;
+                                                }
+                                                ?>
                                                 </div>
                                             </td>
                                         </tr>
-                                        
-                                        <!-- User 2 (Pending) -->
-                                        <tr class="bg-yellow-50">
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <div class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center mr-3">
-                                                        <i class="fas fa-user text-gray-600"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="text-sm font-medium text-gray-900">Thomas Bernard</div>
-                                                        <div class="text-sm text-gray-500">thomas@email.com</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
-                                                    Voyageur
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                                                    En attente
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                Aujourd'hui
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div class="flex space-x-2">
-                                                    <button class="text-green-600 hover:text-green-900 approve-user" data-user="2">
-                                                        <i class="fas fa-check"></i>
-                                                    </button>
-                                                    <button class="text-red-600 hover:text-red-900 reject-user" data-user="2">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        
-                                        <!-- User 3 (Suspended) -->
-                                        <tr class="bg-red-50">
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <div class="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center mr-3">
-                                                        <i class="fas fa-user text-red-600"></i>
-                                                    </div>
-                                                    <div>
-                                                        <div class="text-sm font-medium text-gray-900">Jean Martin</div>
-                                                        <div class="text-sm text-gray-500">jean@email.com</div>
-                                                        <div class="text-xs text-red-600">3 réclamations</div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
-                                                    Hôte
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
-                                                    Suspendu
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                10/05/2023
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div class="flex space-x-2">
-                                                    <button class="text-blue-600 hover:text-blue-900">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="text-green-600 hover:text-green-900 activate-user" data-user="3">
-                                                        <i class="fas fa-check-circle"></i>
-                                                    </button>
-                                                    <button class="text-red-600 hover:text-red-900">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        <?php
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
                             
                             <!-- Pagination -->
-                            <div class="px-6 py-4 border-t border-gray-200">
+                            <!-- <div class="px-6 py-4 border-t border-gray-200">
                                 <div class="flex items-center justify-between">
                                     <div class="text-sm text-gray-700">
                                         Affichage de <span class="font-bold">1-3</span> sur <span class="font-bold">1,247</span> utilisateurs
@@ -439,7 +338,7 @@ session_start();
                                         </button>
                                     </nav>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     
@@ -451,74 +350,9 @@ session_start();
                                 <select class="p-2 border border-gray-300 rounded-lg">
                                     <option>Tous les statuts</option>
                                     <option>Actif</option>
-                                    <option>En attente</option>
-                                    <option>Signalé</option>
-                                    <option>Désactivé</option>
+                                    <option>Annulé</option>
+                                    <option>Confirmé</option>
                                 </select>
-                            </div>
-                        </div>
-                        
-                        <!-- Reported Rentals -->
-                        <div class="mb-8">
-                            <h4 class="font-bold text-lg mb-4 text-red-600">
-                                <i class="fas fa-exclamation-triangle mr-2"></i>Logements signalés (5)
-                            </h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Reported Rental 1 -->
-                                <div class="bg-red-50 border border-red-200 rounded-xl p-6">
-                                    <div class="flex items-start justify-between mb-4">
-                                        <div>
-                                            <h5 class="font-bold">Appartement Paris - Rue douteuse</h5>
-                                            <p class="text-sm text-gray-600">Signalé 3 fois pour fausses photos</p>
-                                        </div>
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
-                                            Urgent
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600 mb-4">
-                                        <span class="mr-4"><i class="fas fa-user mr-1"></i>Hôte: Jean Martin</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>Signalé le: 20/10/2023</span>
-                                    </div>
-                                    <div class="flex space-x-3">
-                                        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                                            <i class="fas fa-ban mr-2"></i>Désactiver
-                                        </button>
-                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                            <i class="fas fa-eye mr-2"></i>Vérifier
-                                        </button>
-                                        <button class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
-                                            <i class="fas fa-check mr-2"></i>Ignorer
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <!-- Reported Rental 2 -->
-                                <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
-                                    <div class="flex items-start justify-between mb-4">
-                                        <div>
-                                            <h5 class="font-bold">Chalet Chamonix - Prix anormal</h5>
-                                            <p class="text-sm text-gray-600">Prix 2x plus élevé que la moyenne</p>
-                                        </div>
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                                            À vérifier
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center text-sm text-gray-600 mb-4">
-                                        <span class="mr-4"><i class="fas fa-user mr-1"></i>Hôte: Marie Dubois</span>
-                                        <span><i class="fas fa-calendar mr-1"></i>Signalé le: 19/10/2023</span>
-                                    </div>
-                                    <div class="flex space-x-3">
-                                        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                                            <i class="fas fa-ban mr-2"></i>Désactiver
-                                        </button>
-                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                            <i class="fas fa-eye mr-2"></i>Vérifier
-                                        </button>
-                                        <button class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
-                                            <i class="fas fa-check mr-2"></i>Ignorer
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         
@@ -546,44 +380,53 @@ session_start();
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
+                                        <?php
+                                        foreach($rentals as $rental) {
+                                        ?>
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
                                                     <div class="h-10 w-10 rounded overflow-hidden mr-3">
-                                                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" 
+                                                        <img src="<?= $rental['img'] ?>" 
                                                              class="h-full w-full object-cover">
                                                     </div>
                                                     <div>
-                                                        <div class="text-sm font-medium text-gray-900">Appartement Paris</div>
-                                                        <div class="text-sm text-gray-500">89€/nuit</div>
+                                                        <div class="text-sm font-medium text-gray-900"><?= $rental['title'] ?></div>
+                                                        <div class="text-sm text-gray-500"><?= $rental['price'] ?>$/nuit</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                Pierre Martin
+                                                <?= $rental['host'] ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                                    Actif
+                                                    <?= $rental['statut'] ?>
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                24 réservations
+                                                <?= $rental['total_bookings'] ?> réservations
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
-                                                    <button class="text-blue-600 hover:text-blue-900">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="text-yellow-600 hover:text-yellow-900">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <button class="text-red-600 hover:text-red-900">
-                                                        <i class="fas fa-ban"></i>
-                                                    </button>
+                                                <?php
+                                                switch($rental['statut']) {
+                                                    case 'active' : echo '<button class="text-red-600 hover:text-red-900">
+                                                                          Suspender
+                                                                          </button>';
+                                                                    break;
+                                                    case 'inactive' : echo '<button class="text-green-600 hover:text-green-900">
+                                                                            Activer
+                                                                            </button>';
+                                                                    break;
+                                                }
+                                                ?>
                                                 </div>
                                             </td>
                                         </tr>
+                                        <?php
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -595,12 +438,8 @@ session_start();
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">Gestion des réservations</h3>
                             <div class="flex space-x-3">
-                                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                                    <i class="fas fa-download mr-2"></i>Exporter
-                                </button>
                                 <select class="p-2 border border-gray-300 rounded-lg">
                                     <option>Toutes les réservations</option>
-                                    <option>Confirmées</option>
                                     <option>En attente</option>
                                     <option>Annulées</option>
                                     <option>Terminées</option>
@@ -649,205 +488,69 @@ session_start();
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        <!-- Reservation 1 -->
+                                        <?php
+                                        foreach($bookings as $booking) {
+                                        ?>
                                         <tr>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                #RES-2456
+                                                <?= $booking['id'] ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="flex items-center">
                                                     <div class="h-10 w-10 rounded overflow-hidden mr-3">
-                                                        <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" 
+                                                        <img src="<?= $booking['img'] ?>" 
                                                              class="h-full w-full object-cover">
                                                     </div>
-                                                    <div class="text-sm text-gray-900">Appartement Paris</div>
+                                                    <div class="text-sm text-gray-900"><?= $booking['title'] ?></div>
                                                 </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">Sophie Laurent</div>
-                                                <div class="text-sm text-gray-500">sophie@email.com</div>
+                                                <div class="text-sm text-gray-900"><?= $booking['travler'] ?></div>
+                                                <div class="text-sm text-gray-500"><?= $booking['email'] ?></div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                15-20 oct. 2023
+                                               <?= date('d',strtotime($booking['start_date'])) ?> - <?= date('d M.Y',strtotime($booking['end_date'])) ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                267€
+                                                -$
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                                    Confirmée
-                                                </span>
+                                                <?php
+                                                switch($booking['statut']) {
+                                                    case 'active' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800">
+                                                                          Actif
+                                                                          </span>';
+                                                                    break;
+                                                    case 'canceled' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                                                                          Annulée
+                                                                          </span>';
+                                                                    break;
+                                                    case 'completed' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                                          Confirmée
+                                                                          </span>';
+                                                                    break;
+                                                }
+                                                ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex space-x-2">
-                                                    <button class="text-blue-600 hover:text-blue-900">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="text-red-600 hover:text-red-900 cancel-reservation-admin" data-id="2456">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
+                                                <?php
+                                                if($booking['statut'] === 'active') {
+                                                ?>
+                                                <button class="text-red-600 hover:text-red-900 cancel-reservation-admin" data-id="2456">
+                                                    Annuler
+                                                </button>
+                                                <?php
+                                                }
+                                                ?>
                                                 </div>
                                             </td>
                                         </tr>
-                                        
-                                        <!-- Reservation 2 (Problematic) -->
-                                        <tr class="bg-red-50">
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                #RES-2457
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="flex items-center">
-                                                    <div class="h-10 w-10 rounded overflow-hidden mr-3">
-                                                        <img src="https://images.unsplash.com/photo-1518780664697-55e3ad937233?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" 
-                                                             class="h-full w-full object-cover">
-                                                    </div>
-                                                    <div class="text-sm text-gray-900">Chalet Chamonix</div>
-                                                </div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-900">Thomas Bernard</div>
-                                                <div class="text-sm text-gray-500">thomas@email.com</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                22-29 déc. 2023
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                                1,015€
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                                                    Problème
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <div class="flex space-x-2">
-                                                    <button class="text-blue-600 hover:text-blue-900">
-                                                        <i class="fas fa-eye"></i>
-                                                    </button>
-                                                    <button class="text-red-600 hover:text-red-900 cancel-reservation-admin" data-id="2457">
-                                                        <i class="fas fa-times"></i>
-                                                    </button>
-                                                    <button class="text-purple-600 hover:text-purple-900">
-                                                        <i class="fas fa-headset"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        <?php
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Complaints Management Tab -->
-                    <div id="complaints-content" class="tab-panel hidden">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="text-xl font-bold">Gestion des réclamations</h3>
-                            <div class="flex space-x-3">
-                                <select class="p-2 border border-gray-300 rounded-lg">
-                                    <option>Toutes les réclamations</option>
-                                    <option>Non traitées</option>
-                                    <option>En cours</option>
-                                    <option>Résolues</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <!-- Complaints List -->
-                        <div class="space-y-6">
-                            <!-- Complaint 1 -->
-                            <div class="bg-white rounded-xl shadow overflow-hidden">
-                                <div class="p-6">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div>
-                                            <h4 class="font-bold text-lg">Logement non conforme aux photos</h4>
-                                            <p class="text-sm text-gray-600">Référence: #COMP-789</p>
-                                        </div>
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
-                                            Haute priorité
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <p class="text-sm text-gray-600">Plaignant</p>
-                                            <p class="font-medium">Sophie Laurent</p>
-                                            <p class="text-sm text-gray-600">Réservation #RES-2456</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Logement concerné</p>
-                                            <p class="font-medium">Appartement Paris (Hôte: Pierre Martin)</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <p class="text-sm text-gray-600 mb-2">Description:</p>
-                                        <div class="p-4 bg-gray-50 rounded-lg">
-                                            <p>"Les photos montrent un appartement moderne et propre, mais à l'arrivée, l'appartement était sale, des équipements manquaient et il y avait une forte odeur de tabac. Les photos sont trompeuses."</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex space-x-3">
-                                        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                                            <i class="fas fa-ban mr-2"></i>Sanctionner l'hôte
-                                        </button>
-                                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                                            <i class="fas fa-check mr-2"></i>Rembourser le voyageur
-                                        </button>
-                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                            <i class="fas fa-comments mr-2"></i>Contacter les parties
-                                        </button>
-                                        <button class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
-                                            <i class="fas fa-archive mr-2"></i>Archiver
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Complaint 2 -->
-                            <div class="bg-white rounded-xl shadow overflow-hidden">
-                                <div class="p-6">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div>
-                                            <h4 class="font-bold text-lg">Annulation abusive par l'hôte</h4>
-                                            <p class="text-sm text-gray-600">Référence: #COMP-788</p>
-                                        </div>
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                                            Moyenne priorité
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                        <div>
-                                            <p class="text-sm text-gray-600">Plaignant</p>
-                                            <p class="font-medium">Thomas Bernard</p>
-                                            <p class="text-sm text-gray-600">Réservation #RES-2457</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Logement concerné</p>
-                                            <p class="font-medium">Chalet Chamonix (Hôte: Marie Dubois)</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mb-4">
-                                        <p class="text-sm text-gray-600 mb-2">Description:</p>
-                                        <div class="p-4 bg-gray-50 rounded-lg">
-                                            <p>"L'hôte a annulé ma réservation 48h avant mon arrivée sans raison valable. J'avais déjà réservé mes billets de train et cette annulation me cause un préjudice financier important."</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="flex space-x-3">
-                                        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-                                            <i class="fas fa-ban mr-2"></i>Sanctionner l'hôte
-                                        </button>
-                                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                                            <i class="fas fa-euro-sign mr-2"></i>Offrir un crédit
-                                        </button>
-                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                            <i class="fas fa-comments mr-2"></i>Médiation
-                                        </button>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

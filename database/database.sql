@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS rentals (
   FOREIGN KEY (user_id) REFERENCES users(id)
 )
 
+DROP TABLE IF EXISTS bookings;
+
 CREATE TABLE IF NOT EXISTS bookings (
   id INT PRIMARY KEY AUTO_INCREMENT,
   start_date DATE,
@@ -46,6 +48,8 @@ CREATE TABLE IF NOT EXISTS bookings (
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (rental_id) REFERENCES rentals(id)
 )
+
+ALTER TABLE bookings ADD COLUMN statut ENUM('active','completed','canceled') DEFAULT 'active';
 
 CREATE TABLE IF NOT EXISTS reviews (
   id INT PRIMARY KEY AUTO_INCREMENT,
@@ -82,6 +86,3 @@ CREATE TABLE IF NOT EXISTS complaints (
   sender_id INT,
   FOREIGN KEY (sender_id) REFERENCES users(id)
 )
-
-
-

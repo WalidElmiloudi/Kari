@@ -7,10 +7,12 @@ use Core\Database;
 use Entities\Host;
 
 $pdo = Database::getInstance();
+$user_id = $_SESSION['userID'];
 
-$rentals = Host::getAllRentals($pdo,$_SESSION['userID']);
-$rentals_count = Host::getRentalsCount($pdo,$_SESSION['userID']);
-$active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
+$rentals = Host::getAllRentals($pdo,$user_id);
+$rentals_count = Host::getRentalsCount($pdo,$user_id);
+$active_rentals_count = Host::getActiveRentalsCount($pdo,$user_id);
+$active_bookings_count = Host::getActiveBookingCount($pdo,$user_id);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -45,8 +47,6 @@ $active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
                         <a href="favorites.php" class="text-gray-700 hover:text-blue-600 transition">Favoris</a>
                         <a href="#notifications" class="text-gray-700 hover:text-blue-600 transition relative">
                             <i class="far fa-bell"></i>
-                            <span
-                                class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
                         </a>
 
                         <!-- User Menu -->
@@ -126,26 +126,13 @@ $active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
             <!-- Dashboard Content -->
             <div class="p-8">
                 <!-- Stats Overview -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">                    
                     <!-- Stat Card 1 -->
                     <div class="bg-white rounded-xl shadow p-6">
                         <div class="flex items-center justify-between">
                             <div>
-                                <p class="text-gray-600">Revenus ce mois</p>
-                                <p class="text-3xl font-bold">0$</p>
-                            </div>
-                            <div class="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center">
-                                <i class="fas fa-dollar-sign text-green-600 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Stat Card 2 -->
-                    <div class="bg-white rounded-xl shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
                                 <p class="text-gray-600">Réservations actives</p>
-                                <p class="text-3xl font-bold">0</p>
+                                <p class="text-3xl font-bold"><?= $active_rentals_count ?></p>
                             </div>
                             <div class="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center">
                                 <i class="fas fa-calendar-check text-blue-600 text-xl"></i>
@@ -153,20 +140,7 @@ $active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
                         </div>
                     </div>
                     
-                    <!-- Stat Card 3 -->
-                    <div class="bg-white rounded-xl shadow p-6">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-600">Taux d'occupation</p>
-                                <p class="text-3xl font-bold">0</p>
-                            </div>
-                            <div class="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center">
-                                <i class="fas fa-chart-line text-purple-600 text-xl"></i>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Stat Card 4 -->
+                    <!-- Stat Card 2 -->
                     <div class="bg-white rounded-xl shadow p-6">
                         <div class="flex items-center justify-between">
                             <div>
@@ -193,6 +167,7 @@ $active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
                         <div class="space-y-6">
                             <?php
                             foreach($rentals as $rental){
+                            $booking_count = Host::getBookingCountById($pdo,$rental['id']);
                             ?>
                                  <div class="bg-white rounded-xl shadow overflow-hidden">
                                 <div class="flex">
@@ -230,31 +205,13 @@ $active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
                                         
                                         <div class="grid grid-cols-3 gap-4 mt-4">
                                             <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-blue-600">0%</p>
-                                                <p class="text-sm text-gray-600">Occupation</p>
-                                            </div>
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-green-600">0</p>
+                                                <p class="text-2xl font-bold text-green-600"><?= $booking_count ?></p>
                                                 <p class="text-sm text-gray-600">Réservations</p>
-                                            </div>
-                                            <div class="text-center p-3 bg-gray-50 rounded-lg">
-                                                <p class="text-2xl font-bold text-purple-600">0$</p>
-                                                <p class="text-sm text-gray-600">Revenus</p>
                                             </div>
                                         </div>
                                         
                                         <div class="flex justify-between items-center mt-6">
                                             <div class="flex space-x-2">
-                                                <button class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition">
-                                                    <i class="fas fa-eye mr-1"></i> Voir
-                                                </button>
-                                                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
-                                                    <i class="fas fa-edit mr-1"></i> Modifier
-                                                </button>
-                                                <button class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
-                                                    <i class="fas fa-calendar-alt mr-1"></i> Calendrier
-                                                </button>
-                                                
                                                 <?php
                                                 if($rental['statut'] === 'inactive'){
                                                 ?>
@@ -321,37 +278,23 @@ $active_rentals_count = Host::getActiveRentalsCount($pdo,$_SESSION['userID']);
                             <div class="space-y-4">
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Logements actifs</span>
-                                    <span class="font-bold"><?= $active_rentals_count['active_rentals'] ?>/<?= $rentals_count['total_rentals'] ?></span>
-                                </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-gray-600">Nouveaux messages</span>
-                                    <span class="font-bold text-blue-600">0</span>
+                                    <span class="font-bold"><?= $active_rentals_count?>/<?= $rentals_count?></span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Réservations à venir</span>
-                                    <span class="font-bold">0</span>
+                                    <span class="font-bold"><?= $active_bookings_count ?></span>
                                 </div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-gray-600">Avis en attente</span>
                                     <span class="font-bold">0</span>
                                 </div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-gray-600">Paiements en attente</span>
-                                    <span class="font-bold text-green-600">0$</span>
-                                </div>
-                            </div>
-                            <div class="mt-6 pt-4 border-t">
-                                <a href="#" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
-                                    <i class="fas fa-chart-bar mr-2"></i> Voir les statistiques détaillées
-                                </a>
                             </div>
                         </div>
                         
                         <!-- Recent Reservations -->
                         <div class="bg-white rounded-xl shadow p-6">
                             <div class="flex justify-between items-center mb-4">
-                                <h4 class="font-bold text-lg">Réservations récentes</h4>
-                                <a href="#" class="text-blue-600 text-sm">Voir tout</a>
+                                <h4 class="font-bold text-lg">Réservations</h4>
                             </div>
                             <div class="space-y-4">
                            
