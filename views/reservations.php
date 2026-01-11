@@ -254,7 +254,7 @@ $notifications = Notification::getUserNotifications($user_id);
                                 <?php
                                 if($booking['statut'] === 'active') {
                                 ?>
-                                <button onclick="cancellationModal(<?= $booking['booking_id'] ?>,'reservations',<?= $booking['host_id'] ?>)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
+                                <button onclick="cancellationModal(<?= $booking['booking_id'] ?>,'reservations',<?= $booking['host_id'] ?>,'<?= $_SESSION['email'] ?>')" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
                                     <i class="fas fa-times mr-2"></i> Annuler la réservation
                                 </button>
                                 <?php

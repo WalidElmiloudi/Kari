@@ -133,171 +133,6 @@ document.addEventListener("click", (e) => {
             });
         });
       });
-        
-    //     // User Management Actions
-    //     document.querySelectorAll('.approve-user').forEach(button => {
-    //         button.addEventListener('click', function() {
-    //             const userId = this.getAttribute('data-user');
-    //             const userRow = this.closest('tr');
-                
-    //             // Simulate API call
-    //             setTimeout(() => {
-    //                 userRow.classList.remove('bg-yellow-50');
-    //                 userRow.classList.add('bg-green-50');
-                    
-    //                 // Update status
-    //                 const statusCell = userRow.querySelector('td:nth-child(3)');
-    //                 statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Actif</span>';
-                    
-    //                 // Update actions
-    //                 const actionsCell = userRow.querySelector('td:last-child');
-    //                 actionsCell.innerHTML = `
-    //                     <div class="flex space-x-2">
-    //                         <button class="text-blue-600 hover:text-blue-900">
-    //                             <i class="fas fa-eye"></i>
-    //                         </button>
-    //                         <button class="text-yellow-600 hover:text-yellow-900">
-    //                             <i class="fas fa-edit"></i>
-    //                         </button>
-    //                         <button class="text-red-600 hover:text-red-900 suspend-user" data-user="${userId}">
-    //                             <i class="fas fa-ban"></i>
-    //                         </button>
-    //                     </div>
-    //                 `;
-                    
-    //                 // Re-attach event listeners
-    //                 attachUserActionListeners();
-                    
-    //                 showNotification('Utilisateur approuvé', 'L\'utilisateur a été activé avec succès.');
-    //             }, 300);
-    //         });
-    //     });
-        
-    //     document.querySelectorAll('.reject-user').forEach(button => {
-    //         button.addEventListener('click', function() {
-    //             const userId = this.getAttribute('data-user');
-    //             const userRow = this.closest('tr');
-                
-    //             if (confirm('Êtes-vous sûr de vouloir rejeter cet utilisateur ?')) {
-    //                 // Animation fade out
-    //                 userRow.style.opacity = '0.5';
-                    
-    //                 setTimeout(() => {
-    //                     userRow.remove();
-    //                     showNotification('Utilisateur rejeté', 'La demande d\'inscription a été rejetée.');
-    //                 }, 300);
-    //             }
-    //         });
-    //     });
-        
-    //     document.querySelectorAll('.suspend-user').forEach(button => {
-    //         button.addEventListener('click', function() {
-    //             const userId = this.getAttribute('data-user');
-    //             const userRow = this.closest('tr');
-                
-    //             if (confirm('Êtes-vous sûr de vouloir suspendre cet utilisateur ?')) {
-    //                 // Update status
-    //                 const statusCell = userRow.querySelector('td:nth-child(3)');
-    //                 statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Suspendu</span>';
-                    
-    //                 showNotification('Utilisateur suspendu', 'L\'utilisateur a été suspendu avec succès.');
-    //             }
-    //         });
-    //     });
-        
-    //     document.querySelectorAll('.activate-user').forEach(button => {
-    //         button.addEventListener('click', function() {
-    //             const userId = this.getAttribute('data-user');
-    //             const userRow = this.closest('tr');
-                
-    //             // Remove red background
-    //             userRow.classList.remove('bg-red-50');
-                
-    //             // Update status
-    //             const statusCell = userRow.querySelector('td:nth-child(3)');
-    //             statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Actif</span>';
-                
-    //             showNotification('Utilisateur activé', 'L\'utilisateur a été réactivé avec succès.');
-    //         });
-    //     });
-        
-    //     // Cancel Reservation Modal
-    //     const cancelReservationModal = document.getElementById('cancel-reservation-modal');
-    //     const cancelReservationButtons = document.querySelectorAll('.cancel-reservation-admin');
-    //     const confirmCancelReservation = document.getElementById('confirm-cancel-reservation');
-    //     const cancelCancelReservation = document.getElementById('cancel-cancel-reservation');
-    //     const cancellationReason = document.getElementById('cancellation-reason');
-    //     const otherReasonTextarea = document.getElementById('other-reason');
-    //     const refundCheckbox = document.getElementById('refund-checkbox');
-        
-    //     // Reservation data (for demo)
-    //     const reservationsData = {
-    //         '2456': {
-    //             id: '#RES-2456',
-    //             property: 'Appartement Paris',
-    //             traveler: 'Sophie Laurent',
-    //             dates: '15-20 oct. 2023',
-    //             amount: '267€',
-    //             nights: 3
-    //         },
-    //         '2457': {
-    //             id: '#RES-2457',
-    //             property: 'Chalet Chamonix',
-    //             traveler: 'Thomas Bernard',
-    //             dates: '22-29 déc. 2023',
-    //             amount: '1,015€',
-    //             nights: 7
-    //         }
-    //     };
-        
-    //     cancelReservationButtons.forEach(button => {
-    //         button.addEventListener('click', function() {
-    //             currentReservationToCancel = this.getAttribute('data-id');
-    //             const reservation = reservationsData[currentReservationToCancel];
-                
-    //             // Populate modal
-    //             const detailsDiv = document.getElementById('reservation-details');
-    //             detailsDiv.innerHTML = `
-    //                 <div class="font-bold">${reservation.id}</div>
-    //                 <div class="text-sm text-gray-600 mt-1">
-    //                     <i class="fas fa-home mr-1"></i>${reservation.property}
-    //                 </div>
-    //                 <div class="text-sm text-gray-600 mt-1">
-    //                     <i class="fas fa-user mr-1"></i>${reservation.traveler}
-    //                 </div>
-    //                 <div class="text-sm text-gray-600 mt-1">
-    //                     <i class="far fa-calendar mr-1"></i>${reservation.dates} (${reservation.nights} nuits)
-    //                 </div>
-    //                 <div class="text-sm text-gray-600 mt-1">
-    //                     <i class="fas fa-euro-sign mr-1"></i>Montant: ${reservation.amount}
-    //                 </div>
-    //             `;
-                
-    //             // Reset form
-    //             cancellationReason.value = '';
-    //             otherReasonTextarea.value = '';
-    //             otherReasonTextarea.classList.add('hidden');
-    //             refundCheckbox.checked = true;
-                
-    //             // Show modal
-    //             cancelReservationModal.classList.remove('hidden');
-    //         });
-    //     });
-        
-    //     // Show/hide other reason textarea
-    //     if(cancellationReason){
-    //         cancellationReason.addEventListener('change', function() {
-    //         if (this.value === 'other') {
-    //             otherReasonTextarea.classList.remove('hidden');
-    //             otherReasonTextarea.required = true;
-    //         } else {
-    //             otherReasonTextarea.classList.add('hidden');
-    //             otherReasonTextarea.required = false;
-    //         }
-    //     });
-    //     }
-
-    // });
     if(changeStatut){
         changeStatut.forEach(changeBtn=>{
             changeBtn.addEventListener("click",()=>{
@@ -436,7 +271,7 @@ cancelBooking.addEventListener("click",()=>{
 })
 }
 
-function cancellationModal(bookingId,target,hostID){
+function cancellationModal(bookingId,target,hostID,userEmail){
     const modal = document.getElementById('cancellation-modal');
     const newDiv = document.createElement('div');
     newDiv.innerHTML = `    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -451,7 +286,7 @@ function cancellationModal(bookingId,target,hostID){
                 </div>
                 
                 <div class="flex space-x-3">
-                    <a href="../services/cancel-booking.php?booking-id=${bookingId}&target=${target}&host_id=${hostID}">
+                    <a href="../services/cancel-booking.php?booking-id=${bookingId}&target=${target}&host_id=${hostID}&user_email=${userEmail}">
                         <button id="confirm-cancel" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition">
                         Oui, annuler
                         </button>

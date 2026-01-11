@@ -11,9 +11,9 @@ use Entities\Notification;
 $pdo = Database::getInstance();
 if(isset($_SESSION['userID'])){
     $user_id = $_SESSION['userID'];
+    $notifications = Notification::getUserNotifications($user_id);
 }
 $rentals = Rental::dispalyAll($pdo);
-$notifications = Notification::getUserNotifications($user_id);
 ?>
 <!DOCTYPE html>
 <html lang="fr">

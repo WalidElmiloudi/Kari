@@ -473,7 +473,7 @@ $notifications = Notification::getUserNotifications($user_id);
                                                 <?php
                                                 if($booking['statut'] === 'active') {
                                                 ?>
-                                                <button onclick="cancellationModal(<?= $booking['id'] ?>,'admin-dashboard')" class="text-red-600 hover:text-red-900 cancel-reservation-admin" data-id="2456">
+                                                <button onclick="cancellationModal(<?= $booking['id'] ?>,'admin-dashboard',<?= $booking['host_id'] ?>,'<?= $booking['email'] ?>')" class="text-red-600 hover:text-red-900 cancel-reservation-admin" data-id="2456">
                                                     Annuler
                                                 </button>
                                                 <?php
@@ -494,79 +494,6 @@ $notifications = Notification::getUserNotifications($user_id);
             </div>
         </div>
     </div>
-    
-    <!-- Modals -->
-    <!-- Cancel Reservation Modal -->
-    <div id="cancel-reservation-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
-            <div class="p-6">
-                <div class="flex items-center justify-center mb-4">
-                    <div class="h-16 w-16 rounded-full bg-red-100 flex items-center justify-center">
-                        <i class="fas fa-exclamation-triangle text-red-600 text-2xl"></i>
-                    </div>
-                </div>
-                
-                <h3 class="text-xl font-bold text-center text-gray-800 mb-3">Annuler une réservation</h3>
-                
-                <div id="reservation-details" class="p-4 bg-gray-50 rounded-lg mb-6">
-                    <!-- Dynamic content will be inserted here -->
-                </div>
-                
-                <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Raison de l'annulation</label>
-                    <select id="cancellation-reason" class="w-full p-3 border border-gray-300 rounded-lg">
-                        <option value="">Sélectionnez une raison</option>
-                        <option value="fraud">Fraude suspectée</option>
-                        <option value="safety">Problème de sécurité</option>
-                        <option value="complaint">Suite à une réclamation</option>
-                        <option value="terms">Violation des conditions</option>
-                        <option value="other">Autre raison</option>
-                    </select>
-                    <textarea id="other-reason" class="w-full p-3 border border-gray-300 rounded-lg mt-2 hidden" 
-                              placeholder="Expliquez la raison..."></textarea>
-                </div>
-                
-                <div class="mb-6">
-                    <label class="flex items-start">
-                        <input type="checkbox" id="refund-checkbox" class="h-4 w-4 text-blue-600 rounded mt-1">
-                        <span class="ml-2 text-sm text-gray-700">
-                            Rembourser intégralement le voyageur
-                        </span>
-                    </label>
-                    <label class="flex items-start mt-2">
-                        <input type="checkbox" id="notify-checkbox" checked class="h-4 w-4 text-blue-600 rounded mt-1">
-                        <span class="ml-2 text-sm text-gray-700">
-                            Notifier le voyageur et l'hôte par email
-                        </span>
-                    </label>
-                </div>
-                
-                <div class="flex space-x-3">
-                    <button id="confirm-cancel-reservation" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition">
-                        Annuler la réservation
-                    </button>
-                    <button id="cancel-cancel-reservation" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-6 rounded-lg transition">
-                        Retour
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Notification Toast -->
-    <div id="notification-toast" class="fixed bottom-4 right-4 bg-green-600 text-white rounded-lg shadow-2xl p-4 hidden slide-in z-50 max-w-sm">
-        <div class="flex items-center">
-            <i class="fas fa-check-circle text-xl mr-3"></i>
-            <div>
-                <p class="font-medium" id="notification-message">Action réussie !</p>
-                <p class="text-sm opacity-90" id="notification-details">Les modifications ont été enregistrées.</p>
-            </div>
-            <button id="close-notification" class="ml-4 text-white opacity-75 hover:opacity-100">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-    </div>
-
     <section id="pop-up-container">
         
     </section>

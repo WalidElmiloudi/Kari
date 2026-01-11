@@ -78,7 +78,7 @@ class Admin extends User
 
     public static function getAllBookings($pdo): array
     {
-        $stmt = $pdo->query("SELECT b.*,u.name as travler,u.email,r.img,r.title
+        $stmt = $pdo->query("SELECT b.*,u.name as travler,u.email,r.img,r.title,r.user_id as host_id
                              FROM bookings b
                              JOIN users u ON b.user_id = u.id
                              JOIN rentals r ON b.rental_id = r.id;");

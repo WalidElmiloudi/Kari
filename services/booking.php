@@ -9,6 +9,7 @@ if(!isset($_SESSION['userID']) || $_SESSION['stat'] === 'inactive') {
 require '../vendor/autoload.php';
 
 use Core\Database;
+use Core\Mailer;
 use Entities\Rental;
 use Entities\Booking;
 use Entities\Travler;
@@ -17,6 +18,7 @@ use Entities\Notification;
 $pdo = Database::getInstance();
 
 $user_id = $_SESSION['userID'];
+$user_email = $_SESSION['email'];
 $rental_id = $_GET['rental_id'];
 $host_id = $_GET['host_id'];
 $target = $_GET['target'];
@@ -80,6 +82,9 @@ if($count != 0) {
     $booking->book();
     $notification = new Notification("{$_SESSION['name']} booked a rental from You",$host_id);
     $notification->notify();
+    $message = "<h1>Vous avez reserver un logement de {$start_date} a {$end_date} consultez votre page de reservations pour connaitre plus .</h1>";
+    $mailer = new Mailer();
+    $mailer->sendEmail('Reservation',$message,$user_email);
     header("Location: ../views/$target.php");
     exit;
 } else {
