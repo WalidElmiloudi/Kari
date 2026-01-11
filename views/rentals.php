@@ -5,6 +5,7 @@ require '../vendor/autoload.php';
 
 use Core\Database;
 use Entities\Host;
+use Entities\Notification;
 
 $pdo = Database::getInstance();
 $user_id = $_SESSION['userID'];
@@ -13,6 +14,8 @@ $rentals = Host::getAllRentals($pdo,$user_id);
 $rentals_count = Host::getRentalsCount($pdo,$user_id);
 $active_rentals_count = Host::getActiveRentalsCount($pdo,$user_id);
 $active_bookings_count = Host::getActiveBookingCount($pdo,$user_id);
+
+$notifications = Notification::getUserNotifications($user_id);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -20,7 +23,7 @@ $active_bookings_count = Host::getActiveBookingCount($pdo,$user_id);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Hôte - Kari</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -45,9 +48,9 @@ $active_bookings_count = Host::getActiveBookingCount($pdo,$user_id);
                     <div class="flex space-x-6 items-center">
                         <a href="available-rentals.php" class="text-gray-700 hover:text-blue-600 transition">Explorer</a>
                         <a href="favorites.php" class="text-gray-700 hover:text-blue-600 transition">Favoris</a>
-                        <a href="#notifications" class="text-gray-700 hover:text-blue-600 transition relative">
+                        <button id="open-notifications-modal" class="cursor-pointer text-gray-700 hover:text-blue-600 transition relative">
                             <i class="far fa-bell"></i>
-                        </a>
+                        </button>
 
                         <!-- User Menu -->
                         <div class="relative group">
@@ -523,39 +526,43 @@ $active_bookings_count = Host::getActiveBookingCount($pdo,$user_id);
 
   </div>
 </div>
-
+        <!-- Notifications Modal -->
+        <section id="notifications-modal" class="inset-0 fixed overlay bg-black/20 hidden items-center justify-center" aria-hidden="true">
+            <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full h-[50%]">
+                <div class="p-6">
+                   <div class="flex items-center justify-between mb-4">
+                     <h3 class="text-2xl font-bold text-gray-800">Notifications</h3>
+                     <button id="close-notifications-modal" class="cursor-pointer">X</button class="cursor-pointer">
+                   </div>
+                   <div class="w-full h-100 bg-gray-100 overflow-auto [scrollbar-width:none] flex flex-col items-center pt-2 gap-2">
+                    <?php
+                    foreach($notifications as $notification) {
+                    ?>
+                    <div class="w-[95%] rounded-md bg-white flex justify-between px-5 py-5">
+                        <h3>
+                            <?= $notification['body'] ?>
+                        </h3>
+                        <h3>
+                            <?= $notification['date'] ?>
+                        </h3>
+                    </div>
+                    <?php
+                    }
+                    if(empty($notifications)) {
+                    ?>
+                    <h1>
+                        Vous n'avez aucune notification pour le moment !
+                    </h1>
+                    <?php
+                    }
+                    ?>
+                   </div>
+                </div>
+               
+            </div>
+        </section>
 
     <!-- JavaScript for interactivity -->
-    <script src="../assets/script.js">
-        // // Toggle dropdown menus
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     // Mobile menu toggle (if needed)
-        //     const mobileMenuButton = document.getElementById('mobile-menu-button');
-        //     const mobileMenu = document.getElementById('mobile-menu');
-            
-        //     if (mobileMenuButton && mobileMenu) {
-        //         mobileMenuButton.addEventListener('click', function() {
-        //             mobileMenu.classList.toggle('hidden');
-        //         });
-        //     }
-            
-        //     // Make all dropdowns work
-        //     const dropdownButtons = document.querySelectorAll('.group button');
-        //     dropdownButtons.forEach(button => {
-        //         button.addEventListener('click', function(e) {
-        //             e.stopPropagation();
-        //             const dropdown = this.nextElementSibling;
-        //             dropdown.classList.toggle('hidden');
-        //         });
-        //     });
-            
-        //     // Close dropdowns when clicking outside
-        //     document.addEventListener('click', function() {
-        //         document.querySelectorAll('.group .hidden').forEach(dropdown => {
-        //             dropdown.classList.add('hidden');
-        //         });
-        //     });
-        // });
-    </script>
+    <script src="../assets/script.js"></script>
 </body>
 </html>

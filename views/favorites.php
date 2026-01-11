@@ -1,7 +1,10 @@
 <?php
 session_start();
 
-require '../vendor/autoload.php';
+require_once '../vendor/autoload.php';
+
+use Entities\Notification;
+
 
 use Core\Database;
 use Entities\Favorite;
@@ -9,6 +12,7 @@ use Entities\Favorite;
 $pdo = Database::getInstance();
 $user_id = $_SESSION['userID'];
 
+$notifications = Notification::getUserNotifications($user_id);
 $favorites = Favorite::getAllFavorites($pdo,$user_id);
 $favorite_count = Favorite::getCount($user_id);
 ?>
@@ -18,7 +22,7 @@ $favorite_count = Favorite::getCount($user_id);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Favoris - Kari</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -57,9 +61,9 @@ $favorite_count = Favorite::getCount($user_id);
                     <a href="index.php" class="text-gray-700 hover:text-blue-600  transition">Home</a>
                     <div class="flex space-x-6 items-center">
                         <a href="available-rentals.php" class="text-gray-700 hover:text-blue-600 transition">Explorer</a>
-                        <a href="#notifications" class="text-gray-700 hover:text-blue-600 transition relative">
+                        <button id="open-notifications-modal" class="cursor-pointer text-gray-700 hover:text-blue-600 transition relative">
                             <i class="far fa-bell"></i>
-                        </a>
+                        </button>
 
                         <!-- User Menu -->
                         <div class="relative group">
@@ -294,6 +298,41 @@ $favorite_count = Favorite::getCount($user_id);
         <section id="bookingModal">
 
     </section>
+            <!-- Notifications Modal -->
+        <section id="notifications-modal" class="inset-0 fixed overlay bg-black/20 hidden items-center justify-center" aria-hidden="true">
+            <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full h-[50%]">
+                <div class="p-6">
+                   <div class="flex items-center justify-between mb-4">
+                     <h3 class="text-2xl font-bold text-gray-800">Notifications</h3>
+                     <button id="close-notifications-modal" class="cursor-pointer">X</button class="cursor-pointer">
+                   </div>
+                   <div class="w-full h-100 bg-gray-100 overflow-auto [scrollbar-width:none] flex flex-col items-center pt-2 gap-2">
+                    <?php
+                    foreach($notifications as $notification) {
+                    ?>
+                    <div class="w-[95%] rounded-md bg-white flex justify-between px-5 py-5">
+                        <h3>
+                            <?= $notification['body'] ?>
+                        </h3>
+                        <h3>
+                            <?= $notification['date'] ?>
+                        </h3>
+                    </div>
+                    <?php
+                    }
+                    if(empty($notifications)) {
+                    ?>
+                    <h1>
+                        Vous n'avez aucune notification pour le moment !
+                    </h1>
+                    <?php
+                    }
+                    ?>
+                   </div>
+                </div>
+               
+            </div>
+        </section>
     <script src="../assets/script.js"></script>
 </body>
 </html>

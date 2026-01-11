@@ -94,4 +94,12 @@ class Rental
         return $results;
     }
 
+    public static function getRentalOwner($rental_id): array
+    {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->query("SELECT * FROM users u JOIN rentals r ON r.user_id = u.id WHERE rental_id = $rental_id");
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
 }

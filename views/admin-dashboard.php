@@ -5,24 +5,27 @@ require '../vendor/autoload.php';
 
 use Core\Database;
 use Entities\Admin;
+use Entities\Notification;
 
+    
 $pdo = Database::getInstance();
 $user_id = $_SESSION['userID'];
-
+    
 $users_count = Admin::getUsersCount($pdo);
 $rentals_count = Admin::getActiveRentalsCount($pdo);
 $bookings_count = Admin::getBookingsCount($pdo);
 $users = Admin::getAllUsers($pdo);
 $rentals = Admin::getAllRentals($pdo);
 $bookings = Admin::getAllBookings($pdo);
-?>
+$notifications = Notification::getUserNotifications($user_id);
+    ?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kari - Location courte durée</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,9 +53,9 @@ $bookings = Admin::getAllBookings($pdo);
                     <div class="flex space-x-6 items-center">
                         <a href="available-rentals.php" class="text-gray-700 hover:text-blue-600  transition">Explorer</a>
                         <a href="favorites.php" class="text-gray-700 hover:text-blue-600 transition">Favoris</a>
-                        <a href="#notifications" class="text-gray-700 hover:text-blue-600 transition relative">
+                        <button id="open-notifications-modal" class="cursor-pointer text-gray-700 hover:text-blue-600 transition relative">
                             <i class="far fa-bell"></i>
-                        </a>
+                        </button>
 
                         <!-- User Menu -->
                         <div class="relative group">
@@ -571,6 +574,41 @@ $bookings = Admin::getAllBookings($pdo);
      <section id="cancellation-modal">
 
      </section>
+             <!-- Notifications Modal -->
+        <section id="notifications-modal" class="inset-0 fixed overlay bg-black/20 hidden items-center justify-center" aria-hidden="true">
+            <div class="bg-white rounded-xl shadow-2xl max-w-xl w-full h-[50%]">
+                <div class="p-6">
+                   <div class="flex items-center justify-between mb-4">
+                     <h3 class="text-2xl font-bold text-gray-800">Notifications</h3>
+                     <button id="close-notifications-modal" class="cursor-pointer">X</button class="cursor-pointer">
+                   </div>
+                   <div class="w-full h-100 bg-gray-100 overflow-auto [scrollbar-width:none] flex flex-col items-center pt-2 gap-2">
+                    <?php
+                    foreach($notifications as $notification) {
+                    ?>
+                    <div class="w-[95%] rounded-md bg-white flex justify-between px-5 py-5">
+                        <h3>
+                            <?= $notification['body'] ?>
+                        </h3>
+                        <h3>
+                            <?= $notification['date'] ?>
+                        </h3>
+                    </div>
+                    <?php
+                    }
+                    if(empty($notifications)) {
+                    ?>
+                    <h1>
+                        Vous n'avez aucune notification pour le moment !
+                    </h1>
+                    <?php
+                    }
+                    ?>
+                   </div>
+                </div>
+               
+            </div>
+        </section>
            <!-- JavaScript -->
     <script src="../assets/script.js"></script>
 </body>

@@ -13,6 +13,7 @@ class User
     protected string $email;
     private string $password;
     private string $role;
+    private string $stat;
     protected PDO $pdo;
 
     public function __construct($email,$password)
@@ -51,6 +52,7 @@ class User
       if(!empty($user)){
           if(password_verify($this->password,$user['password'])){
               $this->name = $user['name'];
+              $this->stat = $user['statut'];
               $this->id = $user['id'];
               $stmt = $this->pdo->query("SELECT r.role FROM roles r JOIN users u ON u.role_id = r.id WHERE u.id = $this->id");
               $role = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -88,6 +90,11 @@ class User
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getStat(): string
+    {
+        return $this->stat;
     }
 }
 

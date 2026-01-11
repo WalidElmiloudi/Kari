@@ -1,5 +1,9 @@
 <?php
 session_start();
+if(!isset($_SESSION['userID']) || $_SESSION['stat'] === 'inactive') {
+    header("Location: ../views/index.php");
+    exit;
+}
 
 require_once '../vendor/autoload.php';
 

@@ -10,6 +10,9 @@ const openAddRentalsModal = document.getElementById("add-rental");
 const closeAddRentalsModal = document.getElementById("close-add-rental-modal");
 const addRentalModal = document.getElementById("add-rental-modal");
 const changeStatut = document.querySelectorAll(".change-statut");
+const openNotificationsModal = document.getElementById("open-notifications-modal");
+const closeNotificationsModal = document.getElementById("close-notifications-modal");
+const notificationsModal = document.getElementById("notifications-modal");
 
 document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const menu = document.getElementById('mobile-menu');
@@ -39,6 +42,16 @@ if(openLoginModal){
   closeLoginModal.addEventListener("click",()=>{
     loginModal.classList.replace("flex", "hidden");
     loginModal.setAttribute("aria-hidden","true");
+  })
+}
+if(openNotificationsModal){
+  openNotificationsModal.addEventListener("click",()=>{
+    notificationsModal.classList.replace("hidden", "flex");
+    notificationsModal.removeAttribute("aria-hidden");
+  })
+  closeNotificationsModal.addEventListener("click",()=>{
+    notificationsModal.classList.replace("flex", "hidden");
+    notificationsModal.setAttribute("aria-hidden","true");
   })
 }
 if(openSignUpModal){
@@ -306,7 +319,7 @@ document.addEventListener("click", (e) => {
         })
     }
 
-function dispalyBookingModal(title,price,rental_id,target){
+function dispalyBookingModal(title,price,rentalId,target,hostId){
     const bookingModal = document.getElementById("bookingModal");
     const newDiv = document.createElement('div');
     newDiv.innerHTML =`<!-- Overlay -->
@@ -333,7 +346,7 @@ function dispalyBookingModal(title,price,rental_id,target){
       </div>
 
       <!-- Form -->
-      <form class="space-y-4 relative" method="post" action="../services/booking.php?rental_id=${rental_id}&target=${target}">
+      <form class="space-y-4 relative" method="post" action="../services/booking.php?rental_id=${rentalId}&target=${target}&host_id=${hostId}">
 
         <!-- Check-in -->
         <div>
@@ -423,7 +436,7 @@ cancelBooking.addEventListener("click",()=>{
 })
 }
 
-function cancellationModal(bookingId,target){
+function cancellationModal(bookingId,target,hostID){
     const modal = document.getElementById('cancellation-modal');
     const newDiv = document.createElement('div');
     newDiv.innerHTML = `    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -438,7 +451,7 @@ function cancellationModal(bookingId,target){
                 </div>
                 
                 <div class="flex space-x-3">
-                    <a href="../services/cancel-booking.php?booking-id=${bookingId}&target=${target}">
+                    <a href="../services/cancel-booking.php?booking-id=${bookingId}&target=${target}&host_id=${hostID}">
                         <button id="confirm-cancel" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition">
                         Oui, annuler
                         </button>

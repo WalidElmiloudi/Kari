@@ -14,6 +14,7 @@ class Travler extends User
                                     b.end_date,
                                     b.statut,
                                     r.id as rental_id,
+                                    r.user_id as host_id,
                                     r.img,
                                     r.title,
                                     r.city,

@@ -20,7 +20,7 @@ class Review
         $this->pdo = Database::getInstance();
     }
 
-    public function addRate($rate,$note): bool
+    public function addReview($rate,$note): bool
     {
         $stmt = $this->pdo->prepare("INSERT INTO reviews (rate,note,rental_id,user_id) VALUES (:rate,:note,:rental_id,:user_id)");
         $stmt->execute([
@@ -32,7 +32,7 @@ class Review
         return true;
     }
 
-    public function deleteRate($review_id): bool
+    public function deleteReview($review_id): bool
     {
         $this->pdo->query("DELETE FROM reviews WHERE id = $review_id");
         return true;

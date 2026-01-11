@@ -1,8 +1,8 @@
 <?php
 
 session_start();
-if(!isset($_SESSION['userID'])) {
-    header("Location: ../views/available-rentals.php");
+if(!isset($_SESSION['userID']) || $_SESSION['stat'] === 'inactive') {
+    header("Location: ../views/index.php");
     exit;
 }
 
@@ -12,11 +12,13 @@ use Core\Database;
 use Entities\Rental;
 use Entities\Booking;
 use Entities\Travler;
+use Entities\Notification;
 
 $pdo = Database::getInstance();
 
 $user_id = $_SESSION['userID'];
 $rental_id = $_GET['rental_id'];
+$host_id = $_GET['host_id'];
 $target = $_GET['target'];
 $start_date = $_POST['checkin'];
 $end_date = $_POST['checkout'];
@@ -76,7 +78,8 @@ foreach ($dates as $date) {
 if($count != 0) {
     $booking = new Booking($rental_id,$start_date,$end_date,$user_id);
     $booking->book();
-    
+    $notification = new Notification("{$_SESSION['name']} booked a rental from You",$host_id);
+    $notification->notify();
     header("Location: ../views/$target.php");
     exit;
 } else {

@@ -18,6 +18,7 @@ if($isValide) {
     $_SESSION['role'] = $user->getRole();
     $_SESSION['name'] = $user->getName();
     $_SESSION['email'] = $user->getEmail();
+    $_SESSION['stat'] = $user->getStat();
     header("Location: ../views/index.php");
     exit;
 }
