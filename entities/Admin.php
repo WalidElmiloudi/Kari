@@ -7,33 +7,33 @@ use PDO;
 
 class Admin extends User
 {
-    public function activateUser($target_id): bool
+    public static function activateUser($pdo,$target_id): bool
     {
-        $this->pdo->query("UPDATE users SET statut = 'active' WHERE id = $target_id");
+        $pdo->query("UPDATE users SET statut = 'active' WHERE id = $target_id");
         return true;
     }
 
-    public function deactivateUser($target_id): bool
+    public static function deactivateUser($pdo,$target_id): bool
     {
-        $this->pdo->query("UPDATE users SET statut = 'blocked' WHERE id = $target_id");
+        $pdo->query("UPDATE users SET statut = 'inactive' WHERE id = $target_id");
         return true;
     }
 
-    public function activateRental($rental_id): bool
+    public static function activateRental($pdo,$rental_id): bool
     {
-        $this->pdo->query("UPDATE rentals SET statut = 'active' WHERE id = $rental_id");
+        $pdo->query("UPDATE rentals SET statut = 'active' WHERE id = $rental_id");
         return true;
     }
 
-    public function deactivateRental($rental_id): bool
+    public static function deactivateRental($pdo,$rental_id): bool
     {
-        $this->pdo->query("UPDATE rentals SET statut = 'blocked' WHERE id = $rental_id");
+        $pdo->query("UPDATE rentals SET statut = 'inactive' WHERE id = $rental_id");
         return true;
     }
 
-    public function cancelBooking($booking_id): bool
+    public static function cancelBooking($pdo,$booking_id): bool
     {
-        $this->pdo->query("DELETE FROM bookings WHERE id = $booking_id");
+        $pdo->query("DELETE FROM bookings WHERE id = $booking_id");
         return true;
     }
 
@@ -60,7 +60,7 @@ class Admin extends User
 
     public static function getAllUsers($pdo): array
     {
-        $stmt = $pdo->query("SELECT u.*,r.role as role_name FROM users u JOIN roles r ON u.role_id = r.id");
+        $stmt = $pdo->query("SELECT u.*,r.role as role_name FROM users u JOIN roles r ON u.role_id = r.id WHERE r.role != 'admin'");
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $results; 
     }

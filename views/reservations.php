@@ -251,7 +251,7 @@ $canceled_bookings_count = Travler::getBookingCount($pdo,$user_id,'canceled');
                                 <?php
                                 if($booking['statut'] === 'active') {
                                 ?>
-                                <button onclick="cancellationModal(<?= $booking['booking_id'] ?>)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
+                                <button onclick="cancellationModal(<?= $booking['booking_id'] ?>,'reservations')" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition">
                                     <i class="fas fa-times mr-2"></i> Annuler la réservation
                                 </button>
                                 <?php
@@ -264,67 +264,7 @@ $canceled_bookings_count = Travler::getBookingCount($pdo,$user_id,'canceled');
                 <?php
                 }
                 ?>
-                
-            <!-- Cancelled Reservations -->
-            <div id="cancelled-content" class="tab-panel hidden">
-                <h2 class="text-xl font-bold mb-6">Réservations annulées</h2>
-                
-                <div class="bg-white rounded-xl shadow overflow-hidden">
-                    <div class="md:flex">
-                        <div class="md:w-1/4">
-                            <img src="https://images.unsplash.com/photo-1513584684374-8bab748fbf90?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                                 alt="Maison campagne" class="h-full w-full object-cover">
-                        </div>
-                        <div class="md:w-3/4 p-6">
-                            <div class="flex flex-col md:flex-row md:items-start md:justify-between">
-                                <div>
-                                    <div class="flex items-start justify-between">
-                                        <div>
-                                            <h3 class="text-xl font-bold">Maison de campagne en Provence</h3>
-                                            <p class="text-gray-600">
-                                                <i class="fas fa-map-marker-alt mr-1"></i>Avignon, Provence
-                                            </p>
-                                        </div>
-                                        <div>
-                                            <span class="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded-full">
-                                                Annulée
-                                            </span>
-                                            <p class="text-sm text-gray-600 mt-1 text-right">Annulé le 15 août 2023</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-                                        <div>
-                                            <p class="text-sm text-gray-600">Dates prévues</p>
-                                            <p class="font-medium">20-27 août 2023</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Prix total</p>
-                                            <p class="text-xl font-bold text-blue-600">560€</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Remboursement</p>
-                                            <p class="font-medium text-green-600">Remboursé: 420€</p>
-                                            <p class="text-xs text-gray-600">(Frais de service: 140€)</p>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Cancellation Details -->
-                                    <div class="mt-4 p-4 bg-red-50 rounded-lg">
-                                        <h4 class="font-medium text-red-800 mb-2">
-                                            <i class="fas fa-info-circle mr-2"></i>Détails de l'annulation
-                                        </h4>
-                                        <p class="text-sm text-red-700">
-                                            Annulé par vous • Politique de remboursement: 75% jusqu'à 7 jours avant l'arrivée
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-    
+
     <!-- Cancellation Modal -->
      <section id="cancellation-modal">
 

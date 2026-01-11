@@ -90,3 +90,7 @@ class User
         return $this->email;
     }
 }
+
+// $user = new User('admin@gmail.com','test1234');
+
+// $user->register('Admin Tester',3);

@@ -199,32 +199,6 @@ $bookings = Admin::getAllBookings($pdo);
                     <div id="users-content" class="tab-panel active">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">Gestion des utilisateurs</h3>
-                            <div class="flex space-x-3">
-                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                    <i class="fas fa-user-plus mr-2"></i>Ajouter un admin
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Filters -->
-                        <div class="bg-white rounded-xl shadow p-4 mb-6">
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                                <input type="text" placeholder="Rechercher par nom/email" class="p-2 border border-gray-300 rounded-lg">
-                                <select class="p-2 border border-gray-300 rounded-lg">
-                                    <option>Tous les rôles</option>
-                                    <option>Voyageur</option>
-                                    <option>Hôte</option>
-                                    <option>Administrateur</option>
-                                </select>
-                                <select class="p-2 border border-gray-300 rounded-lg">
-                                    <option>Tous les statuts</option>
-                                    <option>Actif</option>
-                                    <option>Inactif</option>
-                                </select>
-                                <button class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                    <i class="fas fa-filter mr-2"></i>Filtrer
-                                </button>
-                            </div>
                         </div>
                         
                         <!-- Users Table -->
@@ -274,10 +248,6 @@ $bookings = Admin::getAllBookings($pdo);
                                                                            Hôte
                                                                            </span>';
                                                                      break;
-                                                    case 'admin' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                                                                           Administrateur
-                                                                           </span>';
-                                                                     break;
                                                 }
                                                 ?>
 
@@ -289,7 +259,7 @@ $bookings = Admin::getAllBookings($pdo);
                                                                           Actif
                                                                           </span>';
                                                                     break;
-                                                    case 'inactive' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                    case 'inactive' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
                                                                           Suspendée
                                                                           </span>';
                                                                     break;
@@ -300,13 +270,13 @@ $bookings = Admin::getAllBookings($pdo);
                                                 <div class="flex space-x-2">
                                                 <?php
                                                 switch($user['statut']) {
-                                                    case 'active' : echo '<button class="text-red-600 hover:text-red-900">
+                                                    case 'active' : echo "<button onclick=\"changeUserStatut({$user['id']},'{$user['statut']}','users')\" class=\"text-red-600 hover:text-red-900\">
                                                                           Suspender
-                                                                          </button>';
+                                                                          </button>";
                                                                     break;
-                                                    case 'inactive' : echo '<button class="text-green-600 hover:text-green-900">
+                                                    case 'inactive' : echo "<button onclick=\"changeUserStatut({$user['id']},'{$user['statut']}','users')\" class=\"text-green-600 hover:text-green-900\">
                                                                             Activer
-                                                                            </button>';
+                                                                            </button>";
                                                                     break;
                                                 }
                                                 ?>
@@ -320,25 +290,6 @@ $bookings = Admin::getAllBookings($pdo);
                                 </table>
                             </div>
                             
-                            <!-- Pagination -->
-                            <!-- <div class="px-6 py-4 border-t border-gray-200">
-                                <div class="flex items-center justify-between">
-                                    <div class="text-sm text-gray-700">
-                                        Affichage de <span class="font-bold">1-3</span> sur <span class="font-bold">1,247</span> utilisateurs
-                                    </div>
-                                    <nav class="flex space-x-2">
-                                        <button class="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-100">
-                                            <i class="fas fa-chevron-left"></i>
-                                        </button>
-                                        <button class="px-3 py-1 bg-blue-600 text-white rounded-lg">1</button>
-                                        <button class="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-100">2</button>
-                                        <button class="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-100">3</button>
-                                        <button class="px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-100">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </button>
-                                    </nav>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                     
@@ -346,14 +297,6 @@ $bookings = Admin::getAllBookings($pdo);
                     <div id="rentals-content" class="tab-panel hidden">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">Modération des logements</h3>
-                            <div class="flex space-x-3">
-                                <select class="p-2 border border-gray-300 rounded-lg">
-                                    <option>Tous les statuts</option>
-                                    <option>Actif</option>
-                                    <option>Annulé</option>
-                                    <option>Confirmé</option>
-                                </select>
-                            </div>
                         </div>
                         
                         <!-- All Rentals Table -->
@@ -400,9 +343,18 @@ $bookings = Admin::getAllBookings($pdo);
                                                 <?= $rental['host'] ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                <span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                                    <?= $rental['statut'] ?>
-                                                </span>
+                                               <?php
+                                                switch($rental['statut']) {
+                                                    case 'active' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                                                          Actif
+                                                                          </span>';
+                                                                    break;
+                                                    case 'inactive' : echo '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">
+                                                                          Suspendée
+                                                                          </span>';
+                                                                    break;
+                                                }
+                                                ?>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                 <?= $rental['total_bookings'] ?> réservations
@@ -411,13 +363,13 @@ $bookings = Admin::getAllBookings($pdo);
                                                 <div class="flex space-x-2">
                                                 <?php
                                                 switch($rental['statut']) {
-                                                    case 'active' : echo '<button class="text-red-600 hover:text-red-900">
+                                                    case 'active' : echo "<button onclick=\"changeUserStatut({$rental['id']},'{$rental['statut']}','rentals')\"  class=\"text-red-600 hover:text-red-900\">
                                                                           Suspender
-                                                                          </button>';
+                                                                          </button>";
                                                                     break;
-                                                    case 'inactive' : echo '<button class="text-green-600 hover:text-green-900">
+                                                    case 'inactive' : echo "<button onclick=\"changeUserStatut({$rental['id']},'{$rental['statut']}','rentals')\" class=\"text-green-600 hover:text-green-900\">
                                                                             Activer
-                                                                            </button>';
+                                                                            </button>";
                                                                     break;
                                                 }
                                                 ?>
@@ -437,25 +389,6 @@ $bookings = Admin::getAllBookings($pdo);
                     <div id="reservations-content" class="tab-panel hidden">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="text-xl font-bold">Gestion des réservations</h3>
-                            <div class="flex space-x-3">
-                                <select class="p-2 border border-gray-300 rounded-lg">
-                                    <option>Toutes les réservations</option>
-                                    <option>En attente</option>
-                                    <option>Annulées</option>
-                                    <option>Terminées</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <!-- Search and Filter -->
-                        <div class="bg-white rounded-xl shadow p-4 mb-6">
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <input type="text" placeholder="Rechercher par ID ou email" class="p-2 border border-gray-300 rounded-lg">
-                                <input type="date" class="p-2 border border-gray-300 rounded-lg">
-                                <button class="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                                    <i class="fas fa-search mr-2"></i>Rechercher
-                                </button>
-                            </div>
                         </div>
                         
                         <!-- Reservations Table -->
@@ -537,7 +470,7 @@ $bookings = Admin::getAllBookings($pdo);
                                                 <?php
                                                 if($booking['statut'] === 'active') {
                                                 ?>
-                                                <button class="text-red-600 hover:text-red-900 cancel-reservation-admin" data-id="2456">
+                                                <button onclick="cancellationModal(<?= $booking['id'] ?>,'admin-dashboard')" class="text-red-600 hover:text-red-900 cancel-reservation-admin" data-id="2456">
                                                     Annuler
                                                 </button>
                                                 <?php
@@ -630,6 +563,14 @@ $bookings = Admin::getAllBookings($pdo);
             </button>
         </div>
     </div>
+
+    <section id="pop-up-container">
+        
+    </section>
+        <!-- Cancellation Modal -->
+     <section id="cancellation-modal">
+
+     </section>
            <!-- JavaScript -->
     <script src="../assets/script.js"></script>
 </body>

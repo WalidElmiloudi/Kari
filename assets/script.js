@@ -119,269 +119,172 @@ document.addEventListener("click", (e) => {
                 }
             });
         });
+      });
         
-        // User Management Actions
-        document.querySelectorAll('.approve-user').forEach(button => {
-            button.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user');
-                const userRow = this.closest('tr');
+    //     // User Management Actions
+    //     document.querySelectorAll('.approve-user').forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const userId = this.getAttribute('data-user');
+    //             const userRow = this.closest('tr');
                 
-                // Simulate API call
-                setTimeout(() => {
-                    userRow.classList.remove('bg-yellow-50');
-                    userRow.classList.add('bg-green-50');
+    //             // Simulate API call
+    //             setTimeout(() => {
+    //                 userRow.classList.remove('bg-yellow-50');
+    //                 userRow.classList.add('bg-green-50');
                     
-                    // Update status
-                    const statusCell = userRow.querySelector('td:nth-child(3)');
-                    statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Actif</span>';
+    //                 // Update status
+    //                 const statusCell = userRow.querySelector('td:nth-child(3)');
+    //                 statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Actif</span>';
                     
-                    // Update actions
-                    const actionsCell = userRow.querySelector('td:last-child');
-                    actionsCell.innerHTML = `
-                        <div class="flex space-x-2">
-                            <button class="text-blue-600 hover:text-blue-900">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="text-yellow-600 hover:text-yellow-900">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="text-red-600 hover:text-red-900 suspend-user" data-user="${userId}">
-                                <i class="fas fa-ban"></i>
-                            </button>
-                        </div>
-                    `;
+    //                 // Update actions
+    //                 const actionsCell = userRow.querySelector('td:last-child');
+    //                 actionsCell.innerHTML = `
+    //                     <div class="flex space-x-2">
+    //                         <button class="text-blue-600 hover:text-blue-900">
+    //                             <i class="fas fa-eye"></i>
+    //                         </button>
+    //                         <button class="text-yellow-600 hover:text-yellow-900">
+    //                             <i class="fas fa-edit"></i>
+    //                         </button>
+    //                         <button class="text-red-600 hover:text-red-900 suspend-user" data-user="${userId}">
+    //                             <i class="fas fa-ban"></i>
+    //                         </button>
+    //                     </div>
+    //                 `;
                     
-                    // Re-attach event listeners
-                    attachUserActionListeners();
+    //                 // Re-attach event listeners
+    //                 attachUserActionListeners();
                     
-                    showNotification('Utilisateur approuvé', 'L\'utilisateur a été activé avec succès.');
-                }, 300);
-            });
-        });
-        
-        document.querySelectorAll('.reject-user').forEach(button => {
-            button.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user');
-                const userRow = this.closest('tr');
-                
-                if (confirm('Êtes-vous sûr de vouloir rejeter cet utilisateur ?')) {
-                    // Animation fade out
-                    userRow.style.opacity = '0.5';
-                    
-                    setTimeout(() => {
-                        userRow.remove();
-                        showNotification('Utilisateur rejeté', 'La demande d\'inscription a été rejetée.');
-                    }, 300);
-                }
-            });
-        });
-        
-        document.querySelectorAll('.suspend-user').forEach(button => {
-            button.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user');
-                const userRow = this.closest('tr');
-                
-                if (confirm('Êtes-vous sûr de vouloir suspendre cet utilisateur ?')) {
-                    // Update status
-                    const statusCell = userRow.querySelector('td:nth-child(3)');
-                    statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Suspendu</span>';
-                    
-                    showNotification('Utilisateur suspendu', 'L\'utilisateur a été suspendu avec succès.');
-                }
-            });
-        });
-        
-        document.querySelectorAll('.activate-user').forEach(button => {
-            button.addEventListener('click', function() {
-                const userId = this.getAttribute('data-user');
-                const userRow = this.closest('tr');
-                
-                // Remove red background
-                userRow.classList.remove('bg-red-50');
-                
-                // Update status
-                const statusCell = userRow.querySelector('td:nth-child(3)');
-                statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Actif</span>';
-                
-                showNotification('Utilisateur activé', 'L\'utilisateur a été réactivé avec succès.');
-            });
-        });
-        
-        // Cancel Reservation Modal
-        const cancelReservationModal = document.getElementById('cancel-reservation-modal');
-        const cancelReservationButtons = document.querySelectorAll('.cancel-reservation-admin');
-        const confirmCancelReservation = document.getElementById('confirm-cancel-reservation');
-        const cancelCancelReservation = document.getElementById('cancel-cancel-reservation');
-        const cancellationReason = document.getElementById('cancellation-reason');
-        const otherReasonTextarea = document.getElementById('other-reason');
-        const refundCheckbox = document.getElementById('refund-checkbox');
-        
-        // Reservation data (for demo)
-        const reservationsData = {
-            '2456': {
-                id: '#RES-2456',
-                property: 'Appartement Paris',
-                traveler: 'Sophie Laurent',
-                dates: '15-20 oct. 2023',
-                amount: '267€',
-                nights: 3
-            },
-            '2457': {
-                id: '#RES-2457',
-                property: 'Chalet Chamonix',
-                traveler: 'Thomas Bernard',
-                dates: '22-29 déc. 2023',
-                amount: '1,015€',
-                nights: 7
-            }
-        };
-        
-        cancelReservationButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                currentReservationToCancel = this.getAttribute('data-id');
-                const reservation = reservationsData[currentReservationToCancel];
-                
-                // Populate modal
-                const detailsDiv = document.getElementById('reservation-details');
-                detailsDiv.innerHTML = `
-                    <div class="font-bold">${reservation.id}</div>
-                    <div class="text-sm text-gray-600 mt-1">
-                        <i class="fas fa-home mr-1"></i>${reservation.property}
-                    </div>
-                    <div class="text-sm text-gray-600 mt-1">
-                        <i class="fas fa-user mr-1"></i>${reservation.traveler}
-                    </div>
-                    <div class="text-sm text-gray-600 mt-1">
-                        <i class="far fa-calendar mr-1"></i>${reservation.dates} (${reservation.nights} nuits)
-                    </div>
-                    <div class="text-sm text-gray-600 mt-1">
-                        <i class="fas fa-euro-sign mr-1"></i>Montant: ${reservation.amount}
-                    </div>
-                `;
-                
-                // Reset form
-                cancellationReason.value = '';
-                otherReasonTextarea.value = '';
-                otherReasonTextarea.classList.add('hidden');
-                refundCheckbox.checked = true;
-                
-                // Show modal
-                cancelReservationModal.classList.remove('hidden');
-            });
-        });
-        
-        // Show/hide other reason textarea
-        if(cancellationReason){
-            cancellationReason.addEventListener('change', function() {
-            if (this.value === 'other') {
-                otherReasonTextarea.classList.remove('hidden');
-                otherReasonTextarea.required = true;
-            } else {
-                otherReasonTextarea.classList.add('hidden');
-                otherReasonTextarea.required = false;
-            }
-        });
-        }
-        
-        
-        // Confirm cancellation
-        if(confirmCancelReservation){
-             confirmCancelReservation.addEventListener('click', function() {
-            if (!cancellationReason.value) {
-                alert('Veuillez sélectionner une raison');
-                return;
-            }
-            
-            if (cancellationReason.value === 'other' && !otherReasonTextarea.value.trim()) {
-                alert('Veuillez expliquer la raison');
-                return;
-            }
-            
-            // Simulate cancellation
-            setTimeout(() => {
-                cancelReservationModal.classList.add('hidden');
-                
-                // Find and update the reservation row
-                const reservationRow = document.querySelector(`[data-id="${currentReservationToCancel}"]`).closest('tr');
-                const statusCell = reservationRow.querySelector('td:nth-child(6)');
-                statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Annulée</span>';
-                
-                // Remove cancel button
-                const actionsCell = reservationRow.querySelector('td:last-child');
-                actionsCell.innerHTML = `
-                    <div class="flex space-x-2">
-                        <button class="text-blue-600 hover:text-blue-900">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <span class="text-gray-400 text-sm">Annulée</span>
-                    </div>
-                `;
-                
-                showNotification('Réservation annulée', `La réservation ${currentReservationToCancel} a été annulée.`);
-                currentReservationToCancel = null;
-            }, 300);
-        });
-        }
-       
-        
-    //     // Close cancellation modal
-    //     cancelCancelReservation.addEventListener('click', function() {
-    //         cancelReservationModal.classList.add('hidden');
-    //         currentReservationToCancel = null;
-    //     });
-        
-    //     // Close modal when clicking outside
-    //     cancelReservationModal.addEventListener('click', function(e) {
-    //         if (e.target === this) {
-    //             cancelReservationModal.classList.add('hidden');
-    //             currentReservationToCancel = null;
-    //         }
-    //     });
-        
-    //     // Notification System
-    //     const notificationToast = document.getElementById('notification-toast');
-    //     const closeNotification = document.getElementById('close-notification');
-        
-    //     function showNotification(title, message) {
-    //         document.getElementById('notification-message').textContent = title;
-    //         document.getElementById('notification-details').textContent = message;
-            
-    //         notificationToast.classList.remove('hidden');
-    //         notificationToast.classList.add('slide-in');
-            
-    //         // Auto-hide after 5 seconds
-    //         setTimeout(() => {
-    //             notificationToast.classList.add('hidden');
-    //         }, 5000);
-    //     }
-        
-    //     closeNotification.addEventListener('click', function() {
-    //         notificationToast.classList.add('hidden');
-    //     });
-        
-    //     // Re-attach event listeners for dynamically added elements
-    //     function attachUserActionListeners() {
-    //         // Re-attach all user action listeners
-    //         document.querySelectorAll('.approve-user, .reject-user, .suspend-user, .activate-user, .cancel-reservation-admin').forEach(button => {
-    //             button.addEventListener('click', function() {
-    //                 // The event listeners above will handle these
-    //             });
+    //                 showNotification('Utilisateur approuvé', 'L\'utilisateur a été activé avec succès.');
+    //             }, 300);
     //         });
-    //     }
+    //     });
         
-    //     // Initialize
-    //     attachUserActionListeners()
-
-    //             // Handle escape key
-    //     document.addEventListener('keydown', (e) => {
-    //         if (e.key === 'Escape') {
-    //             if (!cancelReservationModal.classList.contains('hidden')) {
-    //                 cancelReservationModal.classList.add('hidden');
+    //     document.querySelectorAll('.reject-user').forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const userId = this.getAttribute('data-user');
+    //             const userRow = this.closest('tr');
+                
+    //             if (confirm('Êtes-vous sûr de vouloir rejeter cet utilisateur ?')) {
+    //                 // Animation fade out
+    //                 userRow.style.opacity = '0.5';
+                    
+    //                 setTimeout(() => {
+    //                     userRow.remove();
+    //                     showNotification('Utilisateur rejeté', 'La demande d\'inscription a été rejetée.');
+    //                 }, 300);
     //             }
-    //             notificationToast.classList.add('hidden');
+    //         });
+    //     });
+        
+    //     document.querySelectorAll('.suspend-user').forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const userId = this.getAttribute('data-user');
+    //             const userRow = this.closest('tr');
+                
+    //             if (confirm('Êtes-vous sûr de vouloir suspendre cet utilisateur ?')) {
+    //                 // Update status
+    //                 const statusCell = userRow.querySelector('td:nth-child(3)');
+    //                 statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-red-100 text-red-800">Suspendu</span>';
+                    
+    //                 showNotification('Utilisateur suspendu', 'L\'utilisateur a été suspendu avec succès.');
+    //             }
+    //         });
+    //     });
+        
+    //     document.querySelectorAll('.activate-user').forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             const userId = this.getAttribute('data-user');
+    //             const userRow = this.closest('tr');
+                
+    //             // Remove red background
+    //             userRow.classList.remove('bg-red-50');
+                
+    //             // Update status
+    //             const statusCell = userRow.querySelector('td:nth-child(3)');
+    //             statusCell.innerHTML = '<span class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">Actif</span>';
+                
+    //             showNotification('Utilisateur activé', 'L\'utilisateur a été réactivé avec succès.');
+    //         });
+    //     });
+        
+    //     // Cancel Reservation Modal
+    //     const cancelReservationModal = document.getElementById('cancel-reservation-modal');
+    //     const cancelReservationButtons = document.querySelectorAll('.cancel-reservation-admin');
+    //     const confirmCancelReservation = document.getElementById('confirm-cancel-reservation');
+    //     const cancelCancelReservation = document.getElementById('cancel-cancel-reservation');
+    //     const cancellationReason = document.getElementById('cancellation-reason');
+    //     const otherReasonTextarea = document.getElementById('other-reason');
+    //     const refundCheckbox = document.getElementById('refund-checkbox');
+        
+    //     // Reservation data (for demo)
+    //     const reservationsData = {
+    //         '2456': {
+    //             id: '#RES-2456',
+    //             property: 'Appartement Paris',
+    //             traveler: 'Sophie Laurent',
+    //             dates: '15-20 oct. 2023',
+    //             amount: '267€',
+    //             nights: 3
+    //         },
+    //         '2457': {
+    //             id: '#RES-2457',
+    //             property: 'Chalet Chamonix',
+    //             traveler: 'Thomas Bernard',
+    //             dates: '22-29 déc. 2023',
+    //             amount: '1,015€',
+    //             nights: 7
+    //         }
+    //     };
+        
+    //     cancelReservationButtons.forEach(button => {
+    //         button.addEventListener('click', function() {
+    //             currentReservationToCancel = this.getAttribute('data-id');
+    //             const reservation = reservationsData[currentReservationToCancel];
+                
+    //             // Populate modal
+    //             const detailsDiv = document.getElementById('reservation-details');
+    //             detailsDiv.innerHTML = `
+    //                 <div class="font-bold">${reservation.id}</div>
+    //                 <div class="text-sm text-gray-600 mt-1">
+    //                     <i class="fas fa-home mr-1"></i>${reservation.property}
+    //                 </div>
+    //                 <div class="text-sm text-gray-600 mt-1">
+    //                     <i class="fas fa-user mr-1"></i>${reservation.traveler}
+    //                 </div>
+    //                 <div class="text-sm text-gray-600 mt-1">
+    //                     <i class="far fa-calendar mr-1"></i>${reservation.dates} (${reservation.nights} nuits)
+    //                 </div>
+    //                 <div class="text-sm text-gray-600 mt-1">
+    //                     <i class="fas fa-euro-sign mr-1"></i>Montant: ${reservation.amount}
+    //                 </div>
+    //             `;
+                
+    //             // Reset form
+    //             cancellationReason.value = '';
+    //             otherReasonTextarea.value = '';
+    //             otherReasonTextarea.classList.add('hidden');
+    //             refundCheckbox.checked = true;
+                
+    //             // Show modal
+    //             cancelReservationModal.classList.remove('hidden');
+    //         });
+    //     });
+        
+    //     // Show/hide other reason textarea
+    //     if(cancellationReason){
+    //         cancellationReason.addEventListener('change', function() {
+    //         if (this.value === 'other') {
+    //             otherReasonTextarea.classList.remove('hidden');
+    //             otherReasonTextarea.required = true;
+    //         } else {
+    //             otherReasonTextarea.classList.add('hidden');
+    //             otherReasonTextarea.required = false;
     //         }
     //     });
-    });
+    //     }
+
+    // });
     if(changeStatut){
         changeStatut.forEach(changeBtn=>{
             changeBtn.addEventListener("click",()=>{
@@ -520,7 +423,7 @@ cancelBooking.addEventListener("click",()=>{
 })
 }
 
-function cancellationModal(bookingId){
+function cancellationModal(bookingId,target){
     const modal = document.getElementById('cancellation-modal');
     const newDiv = document.createElement('div');
     newDiv.innerHTML = `    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -535,7 +438,7 @@ function cancellationModal(bookingId){
                 </div>
                 
                 <div class="flex space-x-3">
-                    <a href="../services/cancel-booking.php?booking-id=${bookingId}">
+                    <a href="../services/cancel-booking.php?booking-id=${bookingId}&target=${target}">
                         <button id="confirm-cancel" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition">
                         Oui, annuler
                         </button>
@@ -551,4 +454,65 @@ function cancellationModal(bookingId){
     document.getElementById("cancel-modal").addEventListener("click",()=>{
       newDiv.remove();
     })         
+}
+
+function changeUserStatut(id,stat,target){
+  const popUpContainer = document.getElementById("pop-up-container");
+  const newDiv = document.createElement('div');
+  switch(stat){
+    case 'active' :   newDiv.innerHTML = `<div class="inset-0 fixed bg-black/20 flex items-center justify-center">
+                                          <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+                                          <div class="p-6">
+                                          <div class="flex items-center justify-between mb-4">
+                                          <h3 class="text-xl font-bold text-gray-800">Confimer la Suspension</h3>
+                                          </div>
+                
+                                          <div class="mb-6">
+                                          <p class="text-gray-600 mb-4">Êtes-vous sûr de vouloir suspender?</p>
+                                          </div>
+                
+                                          <div class="flex space-x-3">
+                                          <a href="../services/change-stat.php?id=${id}&action=deactivate&target=${target}">
+                                          <button id="confirm-cancel" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-6 rounded-lg transition">
+                                           Oui, Suspender
+                                          </button>
+                                          </a>
+                                          <button id="cancel-change-stat" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-6 rounded-lg transition">
+                                           Non
+                                          </button>
+                                          </div>
+                                          </div>
+                                          </div>
+                                          </div>`;
+                      break;
+    case 'inactive' :   newDiv.innerHTML = `<div class="inset-0 fixed bg-black/20 flex items-center justify-center">
+                                          <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
+                                          <div class="p-6">
+                                          <div class="flex items-center justify-between mb-4">
+                                          <h3 class="text-xl font-bold text-gray-800">Confimer l'Activation</h3>
+                                          </div>
+                
+                                          <div class="mb-6">
+                                          <p class="text-gray-600 mb-4">Êtes-vous sûr de vouloir activer?</p>
+                                          </div>
+                
+                                          <div class="flex space-x-3">
+                                          <a href="../services/change-stat.php?id=${id}&action=activate&target=${target}">
+                                          <button id="confirm-cancel" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition">
+                                           Oui, Activer
+                                          </button>
+                                          </a>
+                                          <button id="cancel-change-stat" class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-6 rounded-lg transition">
+                                           Non
+                                          </button>
+                                          </div>
+                                          </div>
+                                          </div>
+                                          </div>`;
+                       break;
+  }
+    popUpContainer.appendChild(newDiv);
+    document.getElementById("cancel-change-stat").addEventListener("click",()=>{
+      newDiv.remove();
+    })
 }
